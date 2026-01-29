@@ -14,7 +14,7 @@ Du hast es gehört: "Prompting ist das neue Programmieren." Aber was bedeutet da
 
 > "Prompt Engineering ist der Prozess, effektive Anweisungen für ein Modell zu schreiben, sodass es konsistent Inhalte generiert, die deinen Anforderungen entsprechen."
 > 
-> — *OpenAI Dokumentation*[^1]
+> — *OpenAI Dokumentation (übersetzt)*[^1]
 
 Die Kernaussage: Prompting ist **nicht-deterministisch**. Derselbe Prompt kann unterschiedliche Ausgaben produzieren. Dein Ziel ist es, Konsistenz zu maximieren und gleichzeitig Qualität zu erreichen.
 
@@ -29,7 +29,7 @@ OpenAI bietet jetzt zwei grundlegend verschiedene Modellfamilien, die unterschie
 
 > "Man kann sich den Unterschied zwischen Reasoning- und GPT-Modellen so vorstellen: Ein Reasoning-Modell ist wie ein Senior-Kollege. Du kannst ihm ein Ziel geben und darauf vertrauen, dass er die Details selbst ausarbeitet. Ein GPT-Modell ist wie ein Junior-Kollege. Es arbeitet am besten mit expliziten Anweisungen."
 > 
-> — *OpenAI Reasoning Best Practices*[^2]
+> — *OpenAI Reasoning Best Practices (übersetzt)*[^2]
 
 ---
 
@@ -46,7 +46,7 @@ Eine der am wenigsten genutzten Funktionen. Wenn du kein Prompt Caching verwende
 
 > "Prompt Caching kann die Latenz um bis zu 80% und die Input-Token-Kosten um bis zu 90% reduzieren."
 > 
-> — *OpenAI Prompt Caching Guide*[^3]
+> — *OpenAI Prompt Caching Guide (übersetzt)*[^3]
 
 ### Wie es funktioniert
 
@@ -66,7 +66,19 @@ Eine der am wenigsten genutzten Funktionen. Wenn du kein Prompt Caching verwende
 
 > "Platziere statischen Inhalt wie Anweisungen und Beispiele am Anfang deines Prompts und dynamischen, benutzerspezifischen Inhalt am Ende."
 > 
-> — *OpenAI Prompt Caching Guide*[^3]
+> — *OpenAI Prompt Caching Guide (übersetzt)*[^3]
+
+### Cache-Hit-Raten verbessern
+
+Nutze den `prompt_cache_key` Parameter, um das Routing zu beeinflussen und Cache-Hit-Raten zu verbessern, besonders wenn viele Anfragen lange gemeinsame Präfixe teilen:
+
+```json
+{
+  "model": "gpt-5.1",
+  "input": "Dein Prompt hier...",
+  "prompt_cache_key": "my-app-v1"
+}
+```
 
 ### Extended Retention (24h)
 
@@ -79,6 +91,8 @@ Verfügbar für GPT-5.x Modelle:
   "prompt_cache_retention": "24h"
 }
 ```
+
+> **Hinweis:** Extended Caching ist NICHT kompatibel mit Zero Data Retention (ZDR). In-memory Caching ist ZDR-kompatibel.
 
 ---
 
@@ -94,7 +108,7 @@ OpenAI-Modelle folgen einer **Vertrauenshierarchie**:
 
 > "Developer-Messages sind Anweisungen des Anwendungsentwicklers und werden vor User-Messages priorisiert."
 > 
-> — *OpenAI Prompt Engineering Guide*[^1]
+> — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
 
 ### Praktisches Beispiel
 
@@ -134,13 +148,25 @@ var first_name = "Anna";
 
 > "Markdown-Überschriften und Listen können helfen, verschiedene Abschnitte eines Prompts zu markieren und dem Modell eine Hierarchie zu vermitteln."
 > 
-> — *OpenAI Prompt Engineering Guide*[^1]
+> — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
 
 ---
 
 ## GPT-5: Spezifische Best Practices
 
 GPT-5 ist OpenAIs bisher am besten steuerbare Modell. So holst du das Maximum heraus.
+
+### Verbosity Steuerung
+
+GPT-5 führt einen neuen `verbosity` API-Parameter ein, der die Länge der finalen Antworten steuert (nicht des Reasonings):
+
+| Wert | Effekt |
+|------|--------|
+| `low` | Kurze Antworten, minimale Erklärungen |
+| `medium` | Ausgewogen (Standard) |
+| `high` | Ausführliche Erklärungen und Kontext |
+
+Du kannst diesen global gesetzten Parameter mit natürlichsprachlichen Anweisungen in spezifischen Kontexten überschreiben. Zum Beispiel: Setze `verbosity: "low"` global, aber füge "Verwende hohe Ausführlichkeit für Code" in deinem Prompt hinzu.
 
 ### Agentic Eagerness kontrollieren
 
@@ -250,7 +276,7 @@ führe diese proaktiv aus, anstatt zu fragen, ob fortgefahren werden soll.
 
 > "GPT-5s sorgfältiges Instruction-Following bedeutet, dass schlecht konstruierte Prompts mit widersprüchlichen oder vagen Anweisungen schädlicher für GPT-5 sein können als für andere Modelle, da es Reasoning-Tokens verbraucht, um die Widersprüche aufzulösen."
 > 
-> — *OpenAI GPT-5 Prompting Guide*[^4]
+> — *OpenAI GPT-5 Prompting Guide (übersetzt)*[^4]
 
 **Überprüfe deine Prompts auf Konflikte vor dem Deployment!**
 
@@ -259,6 +285,19 @@ führe diese proaktiv aus, anstatt zu fragen, ob fortgefahren werden soll.
 ## Reasoning-Modelle: Andere Regeln gelten
 
 Für o3, o4-mini und andere Reasoning-Modelle gilt: **Vergiss alles, was du über Chain-of-Thought Prompting weißt**.
+
+### Reasoning Effort Stufen
+
+Der `reasoning_effort` Parameter steuert, wie intensiv das Modell nachdenkt:
+
+| Stufe | Anwendungsfall | Trade-off |
+|-------|----------------|-----------|
+| `minimal` | Latenz-kritisch, einfache Aufgaben | Schnellste Option, profitiert von GPT-4.1 Prompting-Patterns |
+| `low` | Schnelle Entscheidungen | Schnell mit etwas Reasoning |
+| `medium` | Standard, ausgewogen | Gut für die meisten Aufgaben |
+| `high` | Komplexe Multi-Step-Aufgaben | Am gründlichsten, höhere Latenz |
+
+> **Tipp:** Bei `minimal` Reasoning: Fordere das Modell auf, eine kurze Erklärung am Anfang der Antwort zu geben (z.B. Stichpunkte), um die Performance zu verbessern.
 
 ### Das solltest du NICHT tun
 
@@ -270,7 +309,7 @@ Für o3, o4-mini und andere Reasoning-Modelle gilt: **Vergiss alles, was du übe
 
 > "Da diese Modelle intern denken, ist es unnötig, sie aufzufordern, 'Schritt für Schritt zu denken' oder 'ihr Vorgehen zu erklären'."
 > 
-> — *OpenAI Reasoning Best Practices*[^2]
+> — *OpenAI Reasoning Best Practices (übersetzt)*[^2]
 
 ### Das solltest du stattdessen tun
 
@@ -293,7 +332,7 @@ Für o3, o4-mini und andere Reasoning-Modelle gilt: **Vergiss alles, was du übe
 
 > "Wir haben GPT-4o durch o1 ersetzt und festgestellt, dass o1 viel besser darin ist, über das Zusammenspiel zwischen Dokumenten zu schlussfolgern und logische Schlüsse zu ziehen, die in keinem einzelnen Dokument offensichtlich waren. Als Ergebnis sahen wir eine 4-fache Verbesserung der End-to-End-Performance."
 > 
-> — *Blue J (Steuerforschungsplattform), via OpenAI*[^2]
+> — *Blue J (Steuerforschungsplattform), via OpenAI (übersetzt)*[^2]
 
 ---
 
@@ -307,7 +346,7 @@ Für GPT-5 Frontend-Projekte empfiehlt OpenAI:
 | **Styling** | Tailwind CSS, shadcn/ui, Radix Themes |
 | **Icons** | Material Symbols, Heroicons, Lucide |
 | **Animation** | Motion |
-| **Fonts** | Inter, Geist, Mona Sans |
+| **Fonts** | Sans Serif, Inter, Geist, Mona Sans, IBM Plex Sans, Manrope |
 
 > — *OpenAI GPT-5 Prompting Guide*[^4]
 
@@ -325,7 +364,7 @@ OpenAIs Dashboard-Tool für automatische Prompt-Verbesserung:
 
 > "Der Prompt Optimizer ist ein Chat-Interface im Dashboard, in dem du einen Prompt eingibst und wir ihn nach aktuellen Best Practices optimieren."
 > 
-> — *OpenAI Prompt Optimizer Guide*[^5]
+> — *OpenAI Prompt Optimizer Guide (übersetzt)*[^5]
 
 ### Evaluations (Evals)
 
@@ -338,7 +377,7 @@ Teste deine Prompts systematisch:
 
 > "Evaluations testen Modell-Outputs, um sicherzustellen, dass sie deinen Stil- und Inhaltskriterien entsprechen. Evals zu schreiben ist eine essentielle Komponente beim Aufbau zuverlässiger Anwendungen."
 > 
-> — *OpenAI Evals Guide*[^6]
+> — *OpenAI Evals Guide (übersetzt)*[^6]
 
 ---
 

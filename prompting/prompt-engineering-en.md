@@ -68,6 +68,18 @@ One of the most underutilized features. If you're not using prompt caching, you'
 > 
 > — *OpenAI Prompt Caching Guide*[^3]
 
+### Improve Cache Hit Rates
+
+Use the `prompt_cache_key` parameter to influence routing and improve cache hit rates, especially when many requests share long common prefixes:
+
+```json
+{
+  "model": "gpt-5.1",
+  "input": "Your prompt goes here...",
+  "prompt_cache_key": "my-app-v1"
+}
+```
+
 ### Extended Retention (24h)
 
 Available for GPT-5.x models:
@@ -79,6 +91,8 @@ Available for GPT-5.x models:
   "prompt_cache_retention": "24h"
 }
 ```
+
+> **Note:** Extended caching is NOT compatible with Zero Data Retention (ZDR). In-memory caching is ZDR-compatible.
 
 ---
 
@@ -141,6 +155,18 @@ var first_name = "Anna";
 ## GPT-5 Specific Best Practices
 
 GPT-5 is OpenAI's most steerable model yet. Here's how to get the most out of it.
+
+### Verbosity Control
+
+GPT-5 introduces a new `verbosity` API parameter that controls the length of final answers (not reasoning):
+
+| Value | Effect |
+|-------|--------|
+| `low` | Concise responses, minimal explanations |
+| `medium` | Balanced (default) |
+| `high` | Detailed explanations and context |
+
+You can override this globally set parameter with natural-language instructions in specific contexts. For example: set `verbosity: "low"` globally, but add "Use high verbosity for code" in your prompt.
 
 ### Controlling Agentic Eagerness
 
@@ -261,6 +287,19 @@ whether to proceed.
 
 For o3, o4-mini, and other reasoning models, **forget everything you know about Chain-of-Thought prompting**.
 
+### Reasoning Effort Levels
+
+The `reasoning_effort` parameter controls how hard the model thinks:
+
+| Level | Use Case | Trade-off |
+|-------|----------|-----------|
+| `minimal` | Latency-sensitive, simple tasks | Fastest, benefits from GPT-4.1 prompting patterns |
+| `low` | Quick decisions | Fast with some reasoning |
+| `medium` | Default, balanced | Good for most tasks |
+| `high` | Complex multi-step tasks | Most thorough, higher latency |
+
+> **Tip:** For `minimal` reasoning, prompt the model to give a brief explanation at the start of the final answer (e.g., bullet points) to improve performance.
+
 ### DON'T Do This
 
 ```
@@ -308,7 +347,7 @@ For GPT-5 frontend projects, OpenAI recommends:
 | **Styling** | Tailwind CSS, shadcn/ui, Radix Themes |
 | **Icons** | Material Symbols, Heroicons, Lucide |
 | **Animation** | Motion |
-| **Fonts** | Inter, Geist, Mona Sans |
+| **Fonts** | Sans Serif, Inter, Geist, Mona Sans, IBM Plex Sans, Manrope |
 
 > — *OpenAI GPT-5 Prompting Guide*[^4]
 
