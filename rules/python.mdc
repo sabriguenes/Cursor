@@ -1,0 +1,179 @@
+---
+description: Python best practices and idioms
+globs: ["**/*.py"]
+alwaysApply: false
+---
+
+# Python Development Standards
+
+You are a Python expert following modern best practices (Python 3.10+).
+
+## Code Style
+
+### PEP 8 Compliance
+- 4 spaces for indentation
+- 88 characters max line length (Black formatter)
+- snake_case for functions and variables
+- PascalCase for classes
+- SCREAMING_SNAKE_CASE for constants
+
+### Imports
+```python
+# Standard library
+import os
+from pathlib import Path
+
+# Third-party
+import requests
+from pydantic import BaseModel
+
+# Local
+from myapp.utils import helper
+```
+
+Order: stdlib → third-party → local, alphabetized within groups.
+
+## Type Hints
+
+Always use type hints for function signatures:
+
+```python
+def process_user(
+    user_id: str,
+    options: dict[str, Any] | None = None,
+) -> User:
+    """Process and return user data."""
+    ...
+```
+
+### Common Patterns
+```python
+from typing import TypeVar, Generic
+from collections.abc import Sequence, Mapping
+
+# Optional values
+name: str | None = None
+
+# Collections
+items: list[str] = []
+mapping: dict[str, int] = {}
+
+# Callable
+handler: Callable[[int, str], bool]
+```
+
+## Python Idioms
+
+### Use Context Managers
+```python
+# ✅ Good
+with open('file.txt') as f:
+    content = f.read()
+
+# ❌ Avoid
+f = open('file.txt')
+content = f.read()
+f.close()
+```
+
+### Comprehensions Over Loops
+```python
+# ✅ Good
+squares = [x**2 for x in range(10)]
+
+# ❌ Verbose
+squares = []
+for x in range(10):
+    squares.append(x**2)
+```
+
+### Walrus Operator (3.8+)
+```python
+# ✅ Good
+if (n := len(data)) > 10:
+    print(f"Too many items: {n}")
+```
+
+### Match Statements (3.10+)
+```python
+match command:
+    case "start":
+        start_process()
+    case "stop":
+        stop_process()
+    case _:
+        raise ValueError(f"Unknown: {command}")
+```
+
+## Data Classes & Pydantic
+
+### For Simple Data
+```python
+from dataclasses import dataclass
+
+@dataclass
+class Point:
+    x: float
+    y: float
+```
+
+### For Validation (APIs)
+```python
+from pydantic import BaseModel, Field
+
+class UserCreate(BaseModel):
+    name: str = Field(..., min_length=1, max_length=100)
+    email: str
+    age: int = Field(..., ge=0, le=150)
+```
+
+## Error Handling
+
+```python
+# Specific exceptions
+try:
+    result = process(data)
+except ValueError as e:
+    logger.warning(f"Invalid data: {e}")
+    raise
+except ConnectionError:
+    # Handle or re-raise with context
+    raise ServiceUnavailableError("API down") from e
+```
+
+## Async/Await
+
+```python
+import asyncio
+import httpx
+
+async def fetch_users(ids: list[str]) -> list[User]:
+    async with httpx.AsyncClient() as client:
+        tasks = [client.get(f"/users/{id}") for id in ids]
+        responses = await asyncio.gather(*tasks)
+        return [User.parse_obj(r.json()) for r in responses]
+```
+
+## Project Structure
+
+```
+myproject/
+├── pyproject.toml
+├── src/
+│   └── myproject/
+│       ├── __init__.py
+│       ├── core/
+│       ├── api/
+│       └── utils/
+├── tests/
+│   ├── conftest.py
+│   └── test_*.py
+└── README.md
+```
+
+## Dependencies
+
+- Use `pyproject.toml` for modern projects
+- Pin versions in production: `requests==2.31.0`
+- Use ranges in libraries: `requests>=2.28,<3.0`
+- Prefer `uv` or `poetry` over raw pip

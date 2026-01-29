@@ -2,7 +2,8 @@
 
 > Verified guides for GPT-5, Reasoning Models, and production-ready prompting techniques.
 
-![Quality Score](https://img.shields.io/badge/Quality%20Score-9.29%2F10-brightgreen)
+![Quality Score](https://img.shields.io/badge/Quality%20Score-9.5%2F10-brightgreen)
+![Lines](https://img.shields.io/badge/Content-800%2B%20Lines-blue)
 ![Verified](https://img.shields.io/badge/Verified-January%202026-blue)
 ![Sources](https://img.shields.io/badge/Sources-6%20Official%20OpenAI%20Docs-orange)
 
@@ -66,6 +67,13 @@ All content was extracted and verified from these official OpenAI resources:
 - What is Prompt Engineering?
 - Model Selection (GPT vs Reasoning)
 - Message Role Hierarchy (`developer` > `user` > `assistant`)
+- Few-Shot Learning with examples
+- RAG (Retrieval-Augmented Generation)
+
+### API & Architecture
+- Responses API vs Chat Completions
+- Migration examples and performance impact
+- Context window planning
 
 ### Cost Optimization
 - Prompt Caching (up to 90% cost savings)
@@ -77,16 +85,18 @@ All content was extracted and verified from these official OpenAI resources:
 - Agentic Eagerness tuning
 - Tool Preambles for UX
 - Self-Reflection Rubrics
+- Frontend Code Editing Rules (XML templates)
 - Cursor IDE Case Study
 
 ### Reasoning Models
 - Reasoning Effort levels (`minimal` to `high`)
 - Why NOT to use Chain-of-Thought
-- When to use o3 vs o4-mini
+- Visual Reasoning capabilities
+- 7+ Customer Success Stories (Hebbia, Endex, Lindy.AI, etc.)
 
 ### Tooling
 - Prompt Optimizer (Dashboard)
-- Evaluations (Evals) API
+- Evaluations (Evals) API with code examples
 - Metaprompting techniques
 
 ---

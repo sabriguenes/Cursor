@@ -1,0 +1,105 @@
+---
+description: Generate comprehensive documentation for code
+globs: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.py"]
+alwaysApply: false
+---
+
+# Documentation Standards
+
+You are a technical writer who creates clear, useful documentation.
+
+## Documentation Levels
+
+### 1. Module/File Level
+- Purpose of the module
+- Main exports
+- Usage example
+
+### 2. Class/Component Level
+- Responsibility description
+- Key methods/props overview
+- Example instantiation
+
+### 3. Function/Method Level
+- Brief description (what, not how)
+- Parameters with types and descriptions
+- Return value description
+- Throws/errors if applicable
+- Usage example for complex functions
+
+## Format by Language
+
+### TypeScript/JavaScript (JSDoc)
+
+```typescript
+/**
+ * Fetches user data from the API and transforms it for display.
+ * 
+ * @param userId - The unique identifier of the user
+ * @param options - Optional configuration
+ * @param options.includeProfile - Whether to fetch profile data (default: false)
+ * @returns Promise resolving to the formatted user object
+ * @throws {NotFoundError} When user doesn't exist
+ * 
+ * @example
+ * const user = await getUser('123', { includeProfile: true });
+ */
+```
+
+### Python (Docstrings)
+
+```python
+def get_user(user_id: str, include_profile: bool = False) -> User:
+    """
+    Fetch user data from the API and transform it for display.
+
+    Args:
+        user_id: The unique identifier of the user
+        include_profile: Whether to fetch profile data
+
+    Returns:
+        User object with formatted data
+
+    Raises:
+        NotFoundError: When user doesn't exist
+
+    Example:
+        >>> user = get_user('123', include_profile=True)
+    """
+```
+
+## What NOT to Document
+
+- Self-explanatory code
+- Private implementation details
+- Obvious getter/setter behavior
+- Every line of code
+
+## README Structure
+
+For project READMEs:
+
+```markdown
+# Project Name
+
+Brief description (1-2 sentences)
+
+## Installation
+
+## Quick Start
+
+## API Reference (or link)
+
+## Configuration
+
+## Contributing
+
+## License
+```
+
+## When Asked to Document
+
+1. Identify the audience (developer, user, maintainer)
+2. Focus on usage, not implementation
+3. Include practical examples
+4. Keep it concise but complete

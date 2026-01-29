@@ -152,6 +152,141 @@ var first_name = "Anna";
 
 ---
 
+## Few-Shot Learning
+
+Few-Shot Learning ermöglicht es, ein Modell auf eine neue Aufgabe zu lenken, indem einige Input/Output-Beispiele im Prompt enthalten sind. Das Modell "erkennt" das Muster und wendet es auf neue Eingaben an.
+
+### Wann Few-Shot nutzen
+
+- Klassifizierungsaufgaben (Sentiment, Kategorie, Priorität)
+- Formatierungsanforderungen (spezifische Ausgabestruktur)
+- Domänenspezifische Terminologie
+- Edge-Case-Handling
+
+### Beispiel: IT-Ticket-Kategorisierung
+
+```markdown
+# Anweisungen
+Kategorisiere das folgende Support-Ticket in: Hardware, Software oder Sonstiges.
+Antworte nur mit einem dieser Wörter.
+
+# Beispiele
+<<product_review id="example-1">>
+Ich liebe diese Kopfhörer — die Klangqualität ist fantastisch!
+<</product_review>>
+
+<<assistant_response id="example-1">>
+Positiv
+<</assistant_response>>
+
+<<product_review id="example-2">>
+Die Akkulaufzeit ist okay, aber die Ohrpolster fühlen sich billig an.
+<</product_review>>
+
+<<assistant_response id="example-2">>
+Neutral
+<</assistant_response>>
+
+<<product_review id="example-3">>
+Schrecklicher Kundenservice, ich werde nie wieder dort kaufen.
+<</product_review>>
+
+<<assistant_response id="example-3">>
+Negativ
+<</assistant_response>>
+```
+
+> **Tipp:** Zeige bei Beispielen eine diverse Bandbreite möglicher Eingaben mit den gewünschten Ausgaben. Decke Edge Cases ab.
+
+---
+
+## Retrieval-Augmented Generation (RAG)
+
+RAG ist die Technik, relevante Kontextinformationen zum Prompt hinzuzufügen, die das Modell zur Antwortgenerierung nutzen kann.
+
+### Warum RAG nutzen?
+
+- Zugriff auf **proprietäre Daten** außerhalb des Trainingssets
+- Antworten auf **spezifische Quellen** beschränken
+- Antworten **aktuell halten** mit neuen Informationen
+
+### Implementierung
+
+1. **Wissensbasis abfragen** (Vektordatenbank, Dateisuche, etc.)
+2. **Abgerufenen Kontext** in den Prompt einfügen
+3. **Kontext referenzieren** in deinen Anweisungen
+
+```markdown
+# Anweisungen
+Beantworte die Frage des Users NUR basierend auf dem bereitgestellten Kontext.
+Wenn die Antwort nicht im Kontext ist, sage "Diese Information habe ich nicht."
+
+# Kontext
+<<document source="internes-wiki">>
+Unsere Rückgaberichtlinie erlaubt Rückgaben innerhalb von 30 Tagen nach Kauf.
+Artikel müssen ungeöffnet und in Originalverpackung sein.
+Digitale Produkte sind nicht erstattungsfähig.
+<</document>>
+
+# User-Frage
+Kann ich eine Software-Lizenz zurückgeben, die ich letzte Woche gekauft habe?
+```
+
+### OpenAIs eingebaute Optionen
+
+- **File Search Tool**: Dokumente hochladen und durchsuchen lassen
+- **Code Interpreter**: Code gegen hochgeladene Dateien ausführen
+- **Web Search**: Echtzeit-Webinformationen abrufen
+
+> **Context Window Hinweis:** Modelle haben Limits (100k-1M Tokens). Plane, welcher Kontext am relevantesten ist.
+
+---
+
+## Responses API vs Chat Completions
+
+OpenAI bietet zwei APIs für Textgenerierung. Für GPT-5 wird die **Responses API** stark empfohlen.
+
+### Hauptunterschiede
+
+| Feature | Responses API | Chat Completions |
+|---------|---------------|------------------|
+| **Reasoning-Persistenz** | Reasoning-Items zwischen Turns erhalten | Stateless, keine Persistenz |
+| **Agentic Performance** | Optimiert für Multi-Turn Tool-Calling | Basis-Tool-Support |
+| **Vorheriger Kontext** | `previous_response_id` nutzen | Manuelle Message-Verwaltung |
+| **Empfohlen für** | GPT-5, agentic Workflows | Legacy-Anwendungen |
+
+### Performance-Auswirkung
+
+> "Wir beobachteten Tau-Bench Retail Score-Verbesserungen von 73,9% auf 78,2% allein durch den Wechsel zur Responses API und die Nutzung von `previous_response_id`."
+> 
+> — *OpenAI GPT-5 Prompting Guide (übersetzt)*[^4]
+
+### Migrations-Beispiel
+
+**Chat Completions (Alt):**
+```javascript
+const response = await client.chat.completions.create({
+  model: "gpt-5",
+  messages: [
+    { role: "system", content: "Du bist ein hilfreicher Assistent." },
+    { role: "user", content: "Hallo!" }
+  ]
+});
+```
+
+**Responses API (Neu):**
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  input: [
+    { role: "developer", content: "Du bist ein hilfreicher Assistent." },
+    { role: "user", content: "Hallo!" }
+  ]
+});
+```
+
+---
+
 ## GPT-5: Spezifische Best Practices
 
 GPT-5 ist OpenAIs bisher am besten steuerbare Modell. So holst du das Maximum heraus.
@@ -334,6 +469,33 @@ Der `reasoning_effort` Parameter steuert, wie intensiv das Modell nachdenkt:
 > 
 > — *Blue J (Steuerforschungsplattform), via OpenAI (übersetzt)*[^2]
 
+### Visual Reasoning
+
+o1 ist das einzige Reasoning-Modell mit Vision-Fähigkeiten. Es versteht komplexe Visualisierungen, bei denen GPT-4o Schwierigkeiten hat:
+
+| Visueller Typ | o1 Vorteil |
+|---------------|------------|
+| Architekturzeichnungen | Identifiziert Einrichtungen, Materialien, liest Legenden über Seiten |
+| Finanzcharts | Versteht Beziehungen zwischen Datenpunkten |
+| Komplexe Tabellen | Parst mehrdeutige Strukturen |
+| Schlechte Bildqualität | Bessere OCR und Interpretation |
+
+> "GPT-4o erreichte 50% Genauigkeit bei unseren schwierigsten Bildklassifizierungsaufgaben. o1 erreichte beeindruckende 88% Genauigkeit ohne Änderungen an unserer Pipeline."
+> 
+> — *SafetyKit (Risiko- & Compliance-Plattform), via OpenAI (übersetzt)*[^2]
+
+### Weitere Kundenerfolgsstorys
+
+| Unternehmen | Anwendungsfall | Ergebnis |
+|-------------|----------------|----------|
+| **Hebbia** | Komplexe Rechtsdokumentanalyse | "o1 lieferte bessere Ergebnisse bei 52% der komplexen Prompts" |
+| **Endex** | M&A Due Diligence | Fand kritische $75M-Darlehensklausel in Fußnoten |
+| **BlueFlame AI** | Aktionärs-Equity-Berechnungen | Löste komplexe Anti-Dilution-Loops fehlerfrei |
+| **Lindy.AI** | Agentic Workflows (E-Mail, Kalender) | "Agents wurden über Nacht praktisch fehlerfrei" |
+| **CodeRabbit** | AI Code Reviews | 3x Steigerung der Produktkonversionsraten |
+| **Windsurf** | Komplexes Software-Design | "Produziert konstant hochwertigen, schlüssigen Code" |
+| **Braintrust** | LLM-as-Judge Evaluierungen | F1-Score verbesserte sich von 0,12 auf 0,74 |
+
 ---
 
 ## Frontend-Entwicklung: Empfohlener Stack
@@ -347,6 +509,48 @@ Für GPT-5 Frontend-Projekte empfiehlt OpenAI:
 | **Icons** | Material Symbols, Heroicons, Lucide |
 | **Animation** | Motion |
 | **Fonts** | Sans Serif, Inter, Geist, Mona Sans, IBM Plex Sans, Manrope |
+
+> — *OpenAI GPT-5 Prompting Guide*[^4]
+
+### Frontend Code Editing Rules
+
+Für konsistenten, hochwertigen Frontend-Code nutze strukturierte Prompts wie diesen:
+
+```xml
+<<code_editing_rules>>
+<<guiding_principles>>
+- Klarheit und Wiederverwendung: Jede Komponente sollte modular und wiederverwendbar sein
+- Konsistenz: Einem einheitlichen Design-System folgen
+- Einfachheit: Kleine, fokussierte Komponenten bevorzugen
+- Visuelle Qualität: Best Practices für Spacing, Padding, Hover-States befolgen
+<</guiding_principles>>
+
+<<frontend_stack_defaults>>
+- Framework: Next.js (TypeScript)
+- Styling: TailwindCSS
+- UI-Komponenten: shadcn/ui
+- Icons: Lucide
+- State Management: Zustand
+- Verzeichnisstruktur:
+  /src
+    /app/api/<route>/route.ts  # API-Endpunkte
+    /(pages)                   # Seiten-Routes
+    /components/               # UI-Bausteine
+    /hooks/                    # Wiederverwendbare React-Hooks
+    /lib/                      # Utilities
+    /stores/                   # Zustand-Stores
+    /types/                    # Geteilte TypeScript-Types
+<</frontend_stack_defaults>>
+
+<<ui_ux_best_practices>>
+- Visuelle Hierarchie: Typografie auf 4-5 Schriftgrößen begrenzen
+- Farbnutzung: 1 neutrale Basis + bis zu 2 Akzentfarben
+- Abstände: Immer Vielfache von 4 für Padding/Margins
+- State-Handling: Skeleton-Platzhalter für Ladezeiten
+- Barrierefreiheit: Semantisches HTML und ARIA-Rollen
+<</ui_ux_best_practices>>
+<</code_editing_rules>>
+```
 
 > — *OpenAI GPT-5 Prompting Guide*[^4]
 
@@ -378,6 +582,67 @@ Teste deine Prompts systematisch:
 > "Evaluations testen Modell-Outputs, um sicherzustellen, dass sie deinen Stil- und Inhaltskriterien entsprechen. Evals zu schreiben ist eine essentielle Komponente beim Aufbau zuverlässiger Anwendungen."
 > 
 > — *OpenAI Evals Guide (übersetzt)*[^6]
+
+#### Eval via API erstellen
+
+```python
+from openai import OpenAI
+client = OpenAI()
+
+eval_obj = client.evals.create(
+    name="IT-Ticket-Kategorisierung",
+    data_source_config={
+        "type": "custom",
+        "item_schema": {
+            "type": "object",
+            "properties": {
+                "ticket_text": {"type": "string"},
+                "correct_label": {"type": "string"},
+            },
+            "required": ["ticket_text", "correct_label"],
+        },
+        "include_sample_schema": True,
+    },
+    testing_criteria=[
+        {
+            "type": "string_check",
+            "name": "Output mit menschlichem Label abgleichen",
+            "input": "{{ sample.output_text }}",
+            "operation": "eq",
+            "reference": "{{ item.correct_label }}",
+        }
+    ],
+)
+```
+
+#### Testdaten-Format (JSONL)
+
+```jsonl
+{"item": {"ticket_text": "Mein Monitor geht nicht an!", "correct_label": "Hardware"}}
+{"item": {"ticket_text": "Ich bin in vim und kann nicht beenden!", "correct_label": "Software"}}
+{"item": {"ticket_text": "Beste Restaurants in München?", "correct_label": "Sonstiges"}}
+```
+
+#### Eval ausführen
+
+```python
+run = client.evals.runs.create(
+    "YOUR_EVAL_ID",
+    name="Kategorisierungs-Testlauf",
+    data_source={
+        "type": "responses",
+        "model": "gpt-4.1",
+        "input_messages": {
+            "type": "template",
+            "template": [
+                {"role": "developer", "content": "Kategorisiere in Hardware, Software oder Sonstiges."},
+                {"role": "user", "content": "{{ item.ticket_text }}"},
+            ],
+        },
+        "source": {"type": "file_id", "id": "YOUR_FILE_ID"},
+    },
+)
+```
 
 ---
 
