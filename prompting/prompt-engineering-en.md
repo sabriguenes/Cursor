@@ -68,9 +68,22 @@ One of the most underutilized features. If you're not using prompt caching, you'
 > 
 > — *OpenAI Prompt Caching Guide*[^3]
 
+### What Can Be Cached
+
+The following content types contribute to the 1024 token minimum:
+
+| Content Type | Notes |
+|--------------|-------|
+| **Messages** | Complete messages array (developer, user, assistant) |
+| **Images** | Links or base64-encoded, including multiple images |
+| **Tool definitions** | The list of available `tools` |
+| **Structured output schema** | Serves as a prefix to the system message |
+
+> — *OpenAI Prompt Caching Guide*[^3]
+
 ### Improve Cache Hit Rates
 
-Use the `prompt_cache_key` parameter to influence routing and improve cache hit rates, especially when many requests share long common prefixes:
+Use the `prompt_cache_key` parameter to influence routing and improve cache hit rates:
 
 ```json
 {
@@ -79,6 +92,10 @@ Use the `prompt_cache_key` parameter to influence routing and improve cache hit 
   "prompt_cache_key": "my-app-v1"
 }
 ```
+
+> "Requests are routed to a machine based on a hash of the initial prefix of the prompt. The hash typically uses the first 256 tokens... If requests for the same prefix and `prompt_cache_key` combination exceed ~15 requests per minute, some may overflow and get routed to additional machines, reducing cache effectiveness."
+> 
+> — *OpenAI Prompt Caching Guide*[^3]
 
 ### Extended Retention (24h)
 
@@ -110,7 +127,27 @@ OpenAI models follow a **hierarchy of trust**:
 > 
 > — *OpenAI Prompt Engineering Guide*[^1]
 
-### Practical Example
+### The `instructions` Parameter
+
+The Responses API offers an `instructions` parameter for high-level guidance:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  instructions: "Talk like a pirate.",  // High-priority instructions
+  input: "Are semicolons optional in JavaScript?",
+});
+```
+
+> "The `instructions` parameter gives the model high-level instructions on how it should behave while generating a response... Any instructions provided this way will take priority over a prompt in the `input` parameter."
+> 
+> — *OpenAI Prompt Engineering Guide*[^1]
+
+**Note:** The `instructions` parameter only applies to the current request. It is not persisted when using `previous_response_id`.
+
+### Using Message Roles
+
+Alternatively, use the `input` array with explicit roles:
 
 ```javascript
 const response = await client.responses.create({
@@ -147,6 +184,73 @@ var first_name = "Anna";
 ```
 
 > "Markdown headers and lists can be helpful to mark distinct sections of a prompt, and to communicate hierarchy to the model."
+> 
+> — *OpenAI Prompt Engineering Guide*[^1]
+
+---
+
+## Reusable Prompts (Dashboard)
+
+OpenAI's dashboard allows you to create reusable prompts with variables:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  prompt: {
+    id: "pmpt_abc123",
+    version: "2",
+    variables: {
+      customer_name: "Jane Doe",
+      product: "40oz juice box"
+    }
+  }
+});
+```
+
+Variables can also include file inputs for document-based prompts:
+
+```javascript
+variables: {
+  topic: "Dragons",
+  reference_pdf: {
+    type: "input_file",
+    file_id: "file-abc123"  // Previously uploaded file
+  }
+}
+```
+
+> — *OpenAI Prompt Engineering Guide*[^1]
+
+---
+
+## Structured Outputs
+
+For applications requiring JSON responses, use **Structured Outputs** to ensure the model returns data conforming to a JSON schema:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  input: "Extract the name and age from: John is 25 years old.",
+  text: {
+    format: {
+      type: "json_schema",
+      json_schema: {
+        name: "person",
+        schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            age: { type: "integer" }
+          },
+          required: ["name", "age"]
+        }
+      }
+    }
+  }
+});
+```
+
+> "In addition to plain text, you can also have the model return structured data in JSON format - this feature is called Structured Outputs."
 > 
 > — *OpenAI Prompt Engineering Guide*[^1]
 
@@ -288,6 +392,21 @@ const response = await client.responses.create({
 ## GPT-5 Specific Best Practices
 
 GPT-5 is OpenAI's most steerable model yet. Here's how to get the most out of it.
+
+### Coding Best Practices
+
+For coding tasks with GPT-5, focus on these areas:
+
+| Area | Recommendation |
+|------|----------------|
+| **Role Definition** | Frame the model as a software engineering agent with clear responsibilities |
+| **Testing** | Instruct to test changes with unit tests; validate patches carefully |
+| **Tool Examples** | Include concrete examples of how to invoke commands |
+| **Markdown** | Generate clean, semantically correct markdown with backticks for code |
+
+> "Prompting GPT-5 for coding tasks is most effective when following a few best practices: define the agent's role, enforce structured tool use with examples, require thorough testing for correctness, and set Markdown standards for clean output."
+> 
+> — *OpenAI Prompt Engineering Guide*[^1]
 
 ### Verbosity Control
 
@@ -452,6 +571,39 @@ The `reasoning_effort` parameter controls how hard the model thinks:
 - Use delimiters (XML, Markdown) for structure
 - Be specific about constraints
 
+### Enable Markdown Output
+
+By default, reasoning models avoid Markdown formatting in API responses. To enable it:
+
+```
+Formatting re-enabled
+
+You are an assistant that helps with code review...
+```
+
+> "Starting with `o1-2024-12-17`, reasoning models in the API will avoid generating responses with markdown formatting. To signal to the model when you do want markdown formatting in the response, include the string `Formatting re-enabled` on the first line of your developer message."
+> 
+> — *OpenAI Reasoning Best Practices*[^2]
+
+### Optimize Costs with Reasoning Persistence
+
+For `o3` and `o4-mini`, reasoning items can be preserved between tool calls to reduce token usage:
+
+```javascript
+const response = await client.responses.create({
+  model: "o4-mini",
+  store: true,  // Enable reasoning persistence
+  input: [...],
+  previous_response_id: "resp_abc123"  // Include previous reasoning
+});
+```
+
+> "With `o3` and `o4-mini`, some reasoning items adjacent to function calls are included in the model's context to help improve model performance while using the least amount of reasoning tokens."
+> 
+> — *OpenAI Reasoning Best Practices*[^2]
+
+**Best Practice:** Use the Responses API with `store: true` and pass all reasoning items from previous requests to avoid restarting reasoning from scratch.
+
 ### When to Use Reasoning Models
 
 | Use Case | Why It Works |
@@ -561,11 +713,22 @@ For consistent, high-quality frontend code, use structured prompts like this:
 
 OpenAI's dashboard tool for automatic prompt improvement:
 
+**Preparation:**
 1. Create a dataset with prompt + evaluation data
-2. Add annotations (Good/Bad) + critiques
-3. Click "Optimize" → new improved version
+2. Create **at least 3 rows** with responses
+3. Add annotations (Good/Bad) + **detailed, specific critiques**
+4. Build **narrowly-defined graders** for each desired property
+
+**Optimization:**
+1. Click "Optimize" → new improved version
+2. Test the new prompt
+3. Repeat: generate → annotate → optimize
 
 > "The prompt optimizer is a chat interface in the dashboard, where you enter a prompt, and we optimize it according to current best practices."
+> 
+> — *OpenAI Prompt Optimizer Guide*[^5]
+
+> "The effectiveness of prompt optimization depends on the quality of your graders. We recommend building narrowly-defined graders for each of the desired output properties where you see your prompt failing."
 > 
 > — *OpenAI Prompt Optimizer Guide*[^5]
 
@@ -642,6 +805,20 @@ run = client.evals.runs.create(
     },
 )
 ```
+
+#### Monitor with Webhooks
+
+Subscribe to eval events for automated monitoring:
+
+| Event | Trigger |
+|-------|---------|
+| `eval.run.succeeded` | Run completed successfully |
+| `eval.run.failed` | Run encountered an error |
+| `eval.run.canceled` | Run was canceled |
+
+> "To receive updates when a run succeeds, fails, or is canceled, create a webhook endpoint and subscribe to the `eval.run.succeeded`, `eval.run.failed`, and `eval.run.canceled` events."
+> 
+> — *OpenAI Evals Guide*[^6]
 
 ---
 

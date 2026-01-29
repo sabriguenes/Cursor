@@ -68,9 +68,22 @@ Eine der am wenigsten genutzten Funktionen. Wenn du kein Prompt Caching verwende
 > 
 > — *OpenAI Prompt Caching Guide (übersetzt)*[^3]
 
+### Was kann gecached werden
+
+Folgende Inhaltstypen zählen zum 1024-Token-Minimum:
+
+| Inhaltstyp | Hinweise |
+|------------|----------|
+| **Messages** | Komplettes Messages-Array (developer, user, assistant) |
+| **Bilder** | Links oder base64-kodiert, auch mehrere Bilder |
+| **Tool-Definitionen** | Die Liste verfügbarer `tools` |
+| **Structured Output Schema** | Dient als Präfix zur System-Message |
+
+> — *OpenAI Prompt Caching Guide*[^3]
+
 ### Cache-Hit-Raten verbessern
 
-Nutze den `prompt_cache_key` Parameter, um das Routing zu beeinflussen und Cache-Hit-Raten zu verbessern, besonders wenn viele Anfragen lange gemeinsame Präfixe teilen:
+Nutze den `prompt_cache_key` Parameter, um das Routing zu beeinflussen:
 
 ```json
 {
@@ -79,6 +92,10 @@ Nutze den `prompt_cache_key` Parameter, um das Routing zu beeinflussen und Cache
   "prompt_cache_key": "my-app-v1"
 }
 ```
+
+> "Anfragen werden basierend auf einem Hash des initialen Präfixes des Prompts geroutet. Der Hash verwendet typischerweise die ersten 256 Tokens... Wenn Anfragen für die gleiche Präfix-`prompt_cache_key`-Kombination ~15 Anfragen pro Minute überschreiten, können einige überlaufen und zu anderen Maschinen geroutet werden, was die Cache-Effektivität reduziert."
+> 
+> — *OpenAI Prompt Caching Guide (übersetzt)*[^3]
 
 ### Extended Retention (24h)
 
@@ -110,7 +127,27 @@ OpenAI-Modelle folgen einer **Vertrauenshierarchie**:
 > 
 > — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
 
-### Praktisches Beispiel
+### Der `instructions` Parameter
+
+Die Responses API bietet einen `instructions` Parameter für High-Level-Anweisungen:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  instructions: "Sprich wie ein Pirat.",  // Hochpriorisierte Anweisungen
+  input: "Sind Semikolons in JavaScript optional?",
+});
+```
+
+> "Der `instructions` Parameter gibt dem Modell High-Level-Anweisungen, wie es sich bei der Antwortgenerierung verhalten soll... Alle so bereitgestellten Anweisungen haben Vorrang vor einem Prompt im `input` Parameter."
+> 
+> — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
+
+**Hinweis:** Der `instructions` Parameter gilt nur für die aktuelle Anfrage. Er wird nicht persistiert bei Verwendung von `previous_response_id`.
+
+### Message Roles verwenden
+
+Alternativ nutze das `input` Array mit expliziten Rollen:
 
 ```javascript
 const response = await client.responses.create({
@@ -147,6 +184,73 @@ var first_name = "Anna";
 ```
 
 > "Markdown-Überschriften und Listen können helfen, verschiedene Abschnitte eines Prompts zu markieren und dem Modell eine Hierarchie zu vermitteln."
+> 
+> — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
+
+---
+
+## Wiederverwendbare Prompts (Dashboard)
+
+OpenAIs Dashboard ermöglicht wiederverwendbare Prompts mit Variablen:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  prompt: {
+    id: "pmpt_abc123",
+    version: "2",
+    variables: {
+      customer_name: "Max Mustermann",
+      product: "Premium-Lizenz"
+    }
+  }
+});
+```
+
+Variablen können auch Dateieingaben für dokumentbasierte Prompts enthalten:
+
+```javascript
+variables: {
+  topic: "Drachen",
+  reference_pdf: {
+    type: "input_file",
+    file_id: "file-abc123"  // Zuvor hochgeladene Datei
+  }
+}
+```
+
+> — *OpenAI Prompt Engineering Guide*[^1]
+
+---
+
+## Structured Outputs
+
+Für Anwendungen, die JSON-Antworten erfordern, nutze **Structured Outputs**, um sicherzustellen, dass das Modell Daten gemäß einem JSON-Schema zurückgibt:
+
+```javascript
+const response = await client.responses.create({
+  model: "gpt-5",
+  input: "Extrahiere Name und Alter aus: Johann ist 25 Jahre alt.",
+  text: {
+    format: {
+      type: "json_schema",
+      json_schema: {
+        name: "person",
+        schema: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            age: { type: "integer" }
+          },
+          required: ["name", "age"]
+        }
+      }
+    }
+  }
+});
+```
+
+> "Zusätzlich zu reinem Text kann das Modell auch strukturierte Daten im JSON-Format zurückgeben - dieses Feature heißt Structured Outputs."
 > 
 > — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
 
@@ -288,6 +392,21 @@ const response = await client.responses.create({
 ## GPT-5: Spezifische Best Practices
 
 GPT-5 ist OpenAIs bisher am besten steuerbare Modell. So holst du das Maximum heraus.
+
+### Coding Best Practices
+
+Für Coding-Aufgaben mit GPT-5 fokussiere auf diese Bereiche:
+
+| Bereich | Empfehlung |
+|---------|------------|
+| **Rollendefinition** | Definiere das Modell als Software-Engineering-Agent mit klaren Verantwortlichkeiten |
+| **Testing** | Anweisen, Änderungen mit Unit-Tests zu testen; Patches sorgfältig validieren |
+| **Tool-Beispiele** | Konkrete Beispiele einbeziehen, wie Befehle aufgerufen werden |
+| **Markdown** | Sauberes, semantisch korrektes Markdown mit Backticks für Code generieren |
+
+> "Prompting von GPT-5 für Coding-Aufgaben ist am effektivsten, wenn ein paar Best Practices befolgt werden: die Rolle des Agenten definieren, strukturierte Tool-Nutzung mit Beispielen erzwingen, gründliches Testen auf Korrektheit verlangen, und Markdown-Standards für sauberen Output setzen."
+> 
+> — *OpenAI Prompt Engineering Guide (übersetzt)*[^1]
 
 ### Verbosity Steuerung
 
@@ -451,6 +570,39 @@ Der `reasoning_effort` Parameter steuert, wie intensiv das Modell nachdenkt:
 - Verwende Delimiter (XML, Markdown) für Struktur
 - Sei spezifisch bei Constraints
 
+### Markdown-Output aktivieren
+
+Standardmäßig vermeiden Reasoning-Modelle Markdown-Formatierung in API-Antworten. Um sie zu aktivieren:
+
+```
+Formatting re-enabled
+
+Du bist ein Assistent, der bei Code-Reviews hilft...
+```
+
+> "Ab `o1-2024-12-17` vermeiden Reasoning-Modelle in der API Antworten mit Markdown-Formatierung. Um dem Modell zu signalisieren, dass du Markdown-Formatierung in der Antwort möchtest, füge den String `Formatting re-enabled` in der ersten Zeile deiner Developer-Message ein."
+> 
+> — *OpenAI Reasoning Best Practices (übersetzt)*[^2]
+
+### Kosten optimieren mit Reasoning-Persistenz
+
+Für `o3` und `o4-mini` können Reasoning-Items zwischen Tool-Calls erhalten bleiben, um Token-Verbrauch zu reduzieren:
+
+```javascript
+const response = await client.responses.create({
+  model: "o4-mini",
+  store: true,  // Reasoning-Persistenz aktivieren
+  input: [...],
+  previous_response_id: "resp_abc123"  // Vorheriges Reasoning einbeziehen
+});
+```
+
+> "Bei `o3` und `o4-mini` werden einige Reasoning-Items neben Function-Calls in den Modellkontext einbezogen, um die Modellleistung zu verbessern und dabei die geringste Anzahl an Reasoning-Tokens zu verwenden."
+> 
+> — *OpenAI Reasoning Best Practices (übersetzt)*[^2]
+
+**Best Practice:** Nutze die Responses API mit `store: true` und übergib alle Reasoning-Items aus vorherigen Anfragen, um ein Neustart des Reasonings zu vermeiden.
+
 ### Wann Reasoning-Modelle verwenden
 
 | Anwendungsfall | Warum es funktioniert |
@@ -560,11 +712,22 @@ Für konsistenten, hochwertigen Frontend-Code nutze strukturierte Prompts wie di
 
 OpenAIs Dashboard-Tool für automatische Prompt-Verbesserung:
 
+**Vorbereitung:**
 1. Dataset mit Prompt + Evaluationsdaten erstellen
-2. Annotations (Good/Bad) + Kritiken hinzufügen
-3. "Optimize" klicken → neue verbesserte Version
+2. **Mindestens 3 Zeilen** mit Antworten erstellen
+3. Annotations (Good/Bad) + **detaillierte, spezifische Kritiken** hinzufügen
+4. **Eng definierte Grader** für jede gewünschte Eigenschaft erstellen
+
+**Optimierung:**
+1. "Optimize" klicken → neue verbesserte Version
+2. Den neuen Prompt testen
+3. Wiederholen: generieren → annotieren → optimieren
 
 > "Der Prompt Optimizer ist ein Chat-Interface im Dashboard, in dem du einen Prompt eingibst und wir ihn nach aktuellen Best Practices optimieren."
+> 
+> — *OpenAI Prompt Optimizer Guide (übersetzt)*[^5]
+
+> "Die Effektivität der Prompt-Optimierung hängt von der Qualität deiner Grader ab. Wir empfehlen, eng definierte Grader für jede gewünschte Output-Eigenschaft zu erstellen, bei der dein Prompt versagt."
 > 
 > — *OpenAI Prompt Optimizer Guide (übersetzt)*[^5]
 
@@ -641,6 +804,20 @@ run = client.evals.runs.create(
     },
 )
 ```
+
+#### Mit Webhooks überwachen
+
+Abonniere Eval-Events für automatisiertes Monitoring:
+
+| Event | Auslöser |
+|-------|----------|
+| `eval.run.succeeded` | Lauf erfolgreich abgeschlossen |
+| `eval.run.failed` | Lauf hat einen Fehler festgestellt |
+| `eval.run.canceled` | Lauf wurde abgebrochen |
+
+> "Um Updates zu erhalten, wenn ein Lauf erfolgreich ist, fehlschlägt oder abgebrochen wird, erstelle einen Webhook-Endpunkt und abonniere die Events `eval.run.succeeded`, `eval.run.failed` und `eval.run.canceled`."
+> 
+> — *OpenAI Evals Guide (übersetzt)*[^6]
 
 ---
 
