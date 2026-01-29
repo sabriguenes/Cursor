@@ -74,14 +74,15 @@ Comprehensive guides with citations to official documentation.
 | Provider | Guides | Topics |
 |----------|--------|--------|
 | [**OpenAI**](prompting/openai/) | [EN](prompting/openai/prompt-engineering-en.md) / [DE](prompting/openai/prompt-engineering-de.md) | GPT-5, o3, o4-mini, Responses API |
+| [**Anthropic**](prompting/anthropic/) | [EN](prompting/anthropic/prompt-engineering-en.md) / [DE](prompting/anthropic/prompt-engineering-de.md) | Opus 4.5, Sonnet 4.5, Agentic Workflows |
 
 **What you'll learn:**
 - GPT-5 vs Reasoning Models (o3, o4-mini) - when to use which
-- Prompt Caching: Save up to 90% on costs
-- Structured Outputs, Reusable Prompts, Evals API
-- Real case study: Cursor's GPT-5 prompt tuning
+- Claude Opus 4.5: XML Tags, Extended Thinking, Effort Parameter
+- Prompt Caching, Structured Outputs, Evals
+- Building Effective Agents (Anthropic patterns)
 
-*More providers coming soon (Anthropic, Gemini, etc.)*
+*More providers coming soon (Gemini, etc.)*
 
 ---
 
@@ -96,8 +97,12 @@ Cursor/
 │
 ├── prompting/                     # Prompt Engineering (by provider)
 │   ├── README.md                  # Overview of all prompting guides
-│   └── openai/                    # OpenAI-specific guides
-│       ├── README.md              # OpenAI guide overview & verification
+│   ├── openai/                    # OpenAI-specific guides
+│   │   ├── README.md              # OpenAI guide overview & verification
+│   │   ├── prompt-engineering-en.md   # English (with citations)
+│   │   └── prompt-engineering-de.md   # German (with citations)
+│   └── anthropic/                 # Anthropic Claude guides
+│       ├── README.md              # Anthropic guide overview & verification
 │       ├── prompt-engineering-en.md   # English (with citations)
 │       └── prompt-engineering-de.md   # German (with citations)
 │

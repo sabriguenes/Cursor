@@ -23,6 +23,23 @@ Comprehensive guides for OpenAI's GPT-5, Reasoning Models (o3, o4-mini), and pro
 
 ---
 
+### [Anthropic (Claude)](./anthropic/)
+
+Comprehensive guides for Claude Opus 4.5, Sonnet 4.5, and agentic workflows.
+
+| Guide | Language | Topics |
+|-------|----------|--------|
+| [Prompt Engineering Guide](./anthropic/prompt-engineering-en.md) | English | Opus 4.5, XML Tags, Extended Thinking, Agents |
+| [Prompt Engineering Leitfaden](./anthropic/prompt-engineering-de.md) | Deutsch | Opus 4.5, XML Tags, Extended Thinking, Agents |
+
+**Key Features:**
+- Based on 7 official Anthropic documentation sources
+- Opus 4.5 specific: Effort parameter, overengineering prevention
+- Building Effective Agents patterns
+- XML templates for structured prompting
+
+---
+
 ## Future Guides (Planned)
 
 We're planning to add guides for other providers. Have a suggestion? [Open an issue](https://github.com/sabriguenes/Cursor/issues).
@@ -30,7 +47,7 @@ We're planning to add guides for other providers. Have a suggestion? [Open an is
 | Provider | Status |
 |----------|--------|
 | OpenAI | ✅ Available |
-| Anthropic (Claude) | 🔜 Planned |
+| Anthropic (Claude) | ✅ Available |
 | Google (Gemini) | 🔜 Planned |
 | General Prompting | 🔜 Planned |
 
