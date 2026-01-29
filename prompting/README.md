@@ -1,126 +1,62 @@
-# OpenAI Prompt Engineering Resources
+# Prompt Engineering Resources
 
-> Verified guides for GPT-5, Reasoning Models, and production-ready prompting techniques.
-
-![Quality Score](https://img.shields.io/badge/Quality%20Score-9.29%2F10-brightgreen)
-![Content](https://img.shields.io/badge/Content-2%20Guides%20EN%2BDE-blue)
-![Verified](https://img.shields.io/badge/Verified-January%202026-blue)
-![Sources](https://img.shields.io/badge/Sources-6%20Official%20OpenAI%20Docs-orange)
+> Curated guides for effective AI prompting, organized by provider.
 
 ---
 
 ## Available Guides
 
-| Guide | Language | Description |
-|-------|----------|-------------|
-| [prompt-engineering-en.md](./prompt-engineering-en.md) | English | Complete 2026 guide to GPT-5, Reasoning Models, and beyond |
-| [prompt-engineering-de.md](./prompt-engineering-de.md) | Deutsch | Vollständiger 2026-Guide für GPT-5, Reasoning-Modelle und mehr |
+### [OpenAI](./openai/)
+
+Comprehensive guides for OpenAI's GPT-5, Reasoning Models (o3, o4-mini), and production APIs.
+
+| Guide | Language | Topics |
+|-------|----------|--------|
+| [Prompt Engineering Guide](./openai/prompt-engineering-en.md) | English | GPT-5, Reasoning Models, Prompt Caching, Evals |
+| [Prompt Engineering Leitfaden](./openai/prompt-engineering-de.md) | Deutsch | GPT-5, Reasoning-Modelle, Prompt Caching, Evals |
+
+**Key Features:**
+- Based on 6 official OpenAI documentation sources
+- All claims verified with citations
+- 12+ production-ready code snippets
+- XML templates for agentic workflows
 
 ---
 
-## Evaluation Methodology
+## Future Guides (Planned)
 
-These guides were verified against **6 official OpenAI documentation sources** using a rigorous 6-point methodology:
+We're planning to add guides for other providers. Have a suggestion? [Open an issue](https://github.com/sabriguenes/Cursor/issues).
 
-### Quality Metrics
-
-| Criterion | Score | Description |
-|-----------|-------|-------------|
-| **User Comprehension** | 8.75/10 | Clear structure, accessible language, logical progression |
-| **Source Accuracy** | 8.5/10 | All quotes verified against original documentation |
-| **Cursor IDE Applicability** | 10/10 | XML templates and code snippets directly usable |
-| **Information Currency** | 10/10 | GPT-5.2, o3, o4-mini - all current as of January 2026 |
-| **Practical Examples** | 9.5/10 | 12+ production-ready code snippets and templates |
-| **Knowledge Extraction** | 9/10 | Novel insights for developers at all levels |
-
-**Overall Score: 9.29/10**
-
-### Verification Process
-
-Each claim in the guides was cross-referenced against the original sources:
-
-1. Direct quotes were matched word-for-word (English) or marked as translated (German)
-2. Technical specifications were verified for accuracy
-3. Code examples were checked for correct syntax
-4. API parameters were validated against current documentation
+| Provider | Status |
+|----------|--------|
+| OpenAI | ✅ Available |
+| Anthropic (Claude) | 🔜 Planned |
+| Google (Gemini) | 🔜 Planned |
+| General Prompting | 🔜 Planned |
 
 ---
 
-## Sources Verified
+## Why Separate by Provider?
 
-All content was extracted and verified from these official OpenAI resources:
+Different AI providers have different:
+- API structures and parameters
+- Model capabilities and limitations
+- Best practices and recommendations
+- Pricing and optimization strategies
 
-| # | Source | URL |
-|---|--------|-----|
-| 1 | Prompt Engineering Guide | https://platform.openai.com/docs/guides/prompt-engineering |
-| 2 | Prompt Caching Guide | https://platform.openai.com/docs/guides/prompt-caching |
-| 3 | Reasoning Best Practices | https://platform.openai.com/docs/guides/reasoning-best-practices |
-| 4 | GPT-5 Prompting Guide | https://cookbook.openai.com/examples/gpt-5/gpt-5_prompting_guide |
-| 5 | Prompt Optimizer | https://platform.openai.com/docs/guides/prompt-optimizer |
-| 6 | Working with Evals | https://platform.openai.com/docs/guides/evals |
-
----
-
-## Key Topics Covered
-
-### Fundamentals
-- What is Prompt Engineering?
-- Model Selection (GPT vs Reasoning)
-- Message Role Hierarchy (`developer` > `user` > `assistant`)
-- Few-Shot Learning with examples
-- RAG (Retrieval-Augmented Generation)
-
-### API & Architecture
-- Responses API vs Chat Completions
-- Migration examples and performance impact
-- Context window planning
-
-### Cost Optimization
-- Prompt Caching (up to 90% cost savings)
-- `prompt_cache_key` for improved hit rates
-- Extended 24h retention for GPT-5.x
-
-### GPT-5 Specific
-- Verbosity Control (`low`, `medium`, `high`)
-- Agentic Eagerness tuning
-- Tool Preambles for UX
-- Self-Reflection Rubrics
-- Frontend Code Editing Rules (XML templates)
-- Cursor IDE Case Study
-
-### Reasoning Models
-- Reasoning Effort levels (`minimal` to `high`)
-- Why NOT to use Chain-of-Thought
-- Visual Reasoning capabilities
-- 7+ Customer Success Stories (Hebbia, Endex, Lindy.AI, etc.)
-
-### Tooling
-- Prompt Optimizer (Dashboard)
-- Evaluations (Evals) API with code examples
-- Metaprompting techniques
-
----
-
-## XML Templates
-
-The guides contain XML-structured prompt templates from OpenAI's GPT-5 documentation:
-
-- `<<context_gathering>>` - Control how the model gathers context
-- `<persistence>` - Configure agentic autonomy
-- `<<tool_preambles>>` - Improve UX during long tasks
-- `<<self_reflection>>` - Enable quality self-evaluation
-
-See the full guides for complete templates with examples.
+Provider-specific guides ensure you get the most accurate, actionable information for the models you're actually using.
 
 ---
 
 ## Contributing
 
-Found an issue or have a suggestion? 
+Want to contribute a guide for a new provider?
 
-- Open an issue on GitHub
-- Submit a pull request with improvements
-- Star this repository if you found it helpful
+1. Fork the repository
+2. Create a new folder under `prompting/` (e.g., `prompting/anthropic/`)
+3. Follow the structure of existing guides
+4. Include citations to official documentation
+5. Submit a pull request
 
 ---
 
@@ -128,7 +64,3 @@ Found an issue or have a suggestion?
 
 **Sabo Guenes**  
 [cursorconsulting.org](https://cursorconsulting.org) | [LinkedIn](https://linkedin.com/in/sabriguenes)
-
----
-
-*Last verified: January 2026*

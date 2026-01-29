@@ -67,20 +67,21 @@ The question every CTO asks before adopting AI coding assistants. This guide pro
 
 ### [Prompt Engineering](prompting/)
 
-> *Master the art of prompting GPT-5, reasoning models, and beyond.*
+> *Master the art of prompting AI models — organized by provider.*
 
-A comprehensive guide based on OpenAI's 2026 documentation, including the Cursor team's real-world learnings from GPT-5 integration.
+Comprehensive guides with citations to official documentation.
 
-| Guide | Language |
-|-------|----------|
-| [OpenAI Prompt Engineering Guide](prompting/prompt-engineering-en.md) | English |
-| [OpenAI Prompt Engineering Leitfaden](prompting/prompt-engineering-de.md) | Deutsch |
+| Provider | Guides | Topics |
+|----------|--------|--------|
+| [**OpenAI**](prompting/openai/) | [EN](prompting/openai/prompt-engineering-en.md) / [DE](prompting/openai/prompt-engineering-de.md) | GPT-5, o3, o4-mini, Responses API |
 
 **What you'll learn:**
 - GPT-5 vs Reasoning Models (o3, o4-mini) - when to use which
 - Prompt Caching: Save up to 90% on costs
-- Agentic workflow control and eagerness levels
+- Structured Outputs, Reusable Prompts, Evals API
 - Real case study: Cursor's GPT-5 prompt tuning
+
+*More providers coming soon (Anthropic, Gemini, etc.)*
 
 ---
 
@@ -93,10 +94,12 @@ Cursor/
 │   ├── privacy-guide-en.md        # English guide
 │   └── privacy-guide-de.md        # German guide
 │
-├── prompting/                     # Prompt Engineering (based on OpenAI docs)
-│   ├── README.md                  # Section overview & verification
-│   ├── prompt-engineering-en.md   # English guide (with citations)
-│   └── prompt-engineering-de.md   # German guide (with citations)
+├── prompting/                     # Prompt Engineering (by provider)
+│   ├── README.md                  # Overview of all prompting guides
+│   └── openai/                    # OpenAI-specific guides
+│       ├── README.md              # OpenAI guide overview & verification
+│       ├── prompt-engineering-en.md   # English (with citations)
+│       └── prompt-engineering-de.md   # German (with citations)
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/
