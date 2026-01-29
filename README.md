@@ -162,16 +162,6 @@ If you find these resources helpful:
 
 ---
 
-## Acknowledgments
-
-Special thanks to:
-
-- The **Cursor team** (Nathan, Nick, Anais) for building an amazing product and being transparent about security
-- **Nao** and the Cursor Ambassador community for the knowledge exchange
-- Everyone at **Cafe Cursor Berlin** for the great discussions
-
----
-
 ## License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
