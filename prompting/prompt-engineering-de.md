@@ -171,28 +171,28 @@ Kategorisiere das folgende Support-Ticket in: Hardware, Software oder Sonstiges.
 Antworte nur mit einem dieser Wörter.
 
 # Beispiele
-<<product_review id="example-1">>
-Ich liebe diese Kopfhörer — die Klangqualität ist fantastisch!
-<</product_review>>
+<<ticket id="example-1">>
+Mein Monitor geht nach dem Umzug an einen anderen Platz nicht mehr an. Die Power-LED bleibt aus.
+<</ticket>>
 
 <<assistant_response id="example-1">>
-Positiv
+Hardware
 <</assistant_response>>
 
-<<product_review id="example-2">>
-Die Akkulaufzeit ist okay, aber die Ohrpolster fühlen sich billig an.
-<</product_review>>
+<<ticket id="example-2">>
+Nach dem Update stürzt die App direkt beim Start ab (Fehlercode 0x0004).
+<</ticket>>
 
 <<assistant_response id="example-2">>
-Neutral
+Software
 <</assistant_response>>
 
-<<product_review id="example-3">>
-Schrecklicher Kundenservice, ich werde nie wieder dort kaufen.
-<</product_review>>
+<<ticket id="example-3">>
+Was sind gute Restaurants in München für ein Team-Dinner?
+<</ticket>>
 
 <<assistant_response id="example-3">>
-Negativ
+Sonstiges
 <</assistant_response>>
 ```
 
@@ -232,13 +232,11 @@ Digitale Produkte sind nicht erstattungsfähig.
 Kann ich eine Software-Lizenz zurückgeben, die ich letzte Woche gekauft habe?
 ```
 
-### OpenAIs eingebaute Optionen
+### Praktische Tipps
 
-- **File Search Tool**: Dokumente hochladen und durchsuchen lassen
-- **Code Interpreter**: Code gegen hochgeladene Dateien ausführen
-- **Web Search**: Echtzeit-Webinformationen abrufen
-
-> **Context Window Hinweis:** Modelle haben Limits (100k-1M Tokens). Plane, welcher Kontext am relevantesten ist.
+- Platziere den abgerufenen Kontext **vor** der User-Frage.
+- Halte den Kontext **kurz und relevant** (Noise entfernen).
+- Wenn du Nachvollziehbarkeit brauchst: **Zitate/Quellen** (Doc-IDs, URLs oder Snippets) in den Kontext aufnehmen und verlangen, dass das Modell darauf referenziert.
 
 ---
 

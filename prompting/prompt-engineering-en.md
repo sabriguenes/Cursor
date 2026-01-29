@@ -171,28 +171,28 @@ Categorize the following support ticket into one of: Hardware, Software, or Othe
 Respond with only one of those words.
 
 # Examples
-<<product_review id="example-1">>
-I absolutely love these headphones — sound quality is amazing!
-<</product_review>>
+<<ticket id="example-1">>
+My monitor won't turn on after I moved desks. The power light stays off.
+<</ticket>>
 
 <<assistant_response id="example-1">>
-Positive
+Hardware
 <</assistant_response>>
 
-<<product_review id="example-2">>
-Battery life is okay, but the ear pads feel cheap.
-<</product_review>>
+<<ticket id="example-2">>
+I updated the app and now it crashes on launch with an error code 0x0004.
+<</ticket>>
 
 <<assistant_response id="example-2">>
-Neutral
+Software
 <</assistant_response>>
 
-<<product_review id="example-3">>
-Terrible customer service, I'll never buy from them again.
-<</product_review>>
+<<ticket id="example-3">>
+What are the best restaurants in Cleveland for a team dinner?
+<</ticket>>
 
 <<assistant_response id="example-3">>
-Negative
+Other
 <</assistant_response>>
 ```
 
@@ -232,13 +232,11 @@ Digital products are non-refundable.
 Can I return a software license I bought last week?
 ```
 
-### OpenAI's Built-in Options
+### Practical Tips
 
-- **File Search Tool**: Upload documents and let the model search them
-- **Code Interpreter**: Execute code against uploaded files
-- **Web Search**: Access real-time web information
-
-> **Context Window Reminder:** Models have limits (100k-1M tokens). Plan which context is most relevant.
+- Put retrieved context **before** the user question.
+- Keep context **short and relevant** (remove noise).
+- If you need traceability, include **citations** (doc IDs, URLs, or quoted snippets) in the context and require the model to reference them.
 
 ---
 

@@ -65,50 +65,6 @@ The question every CTO asks before adopting AI coding assistants. This guide pro
 
 ---
 
-### [Model Comparison Guide](models/model-comparison.md)
-
-> *GPT-5 vs Claude 4 vs Gemini - which one when?*
-
-Comprehensive comparison of all models available in Cursor:
-
-| Model | Best For | Speed | Cost |
-|-------|----------|-------|------|
-| GPT-5 | Agentic tasks, UI | Medium | $$$ |
-| Claude 3.5 Sonnet | Code review, debugging | Fast | $$ |
-| GPT-4o-mini | Simple tasks, high volume | Very Fast | $ |
-| o1/o3 | Complex reasoning | Slow | $$$$ |
-
----
-
-### [Cursor Cheatsheet](cheatsheet/cursor-cheatsheet.md)
-
-> *Everything on one page. Print it, bookmark it, share it.*
-
-Quick reference for:
-- All keyboard shortcuts
-- @ Commands reference
-- Model selection guide
-- Prompting patterns
-- Hidden features
-
----
-
-### [Cursor Rules Collection](rules/)
-
-> *Copy-paste ready rules for consistent AI behavior.*
-
-Production-ready `.mdc` rules that you can drop into any project.
-
-| Rule | Purpose |
-|------|---------|
-| [clean-code.mdc](rules/clean-code.mdc) | Clean code principles |
-| [documentation.mdc](rules/documentation.mdc) | Auto-documentation |
-| [testing.mdc](rules/testing.mdc) | Test-first development |
-| [python.mdc](rules/python.mdc) | Python best practices |
-| [typescript.mdc](rules/typescript.mdc) | TypeScript/React patterns |
-
----
-
 ### [Prompt Engineering](prompting/)
 
 > *Master the art of prompting GPT-5, reasoning models, and beyond.*
@@ -137,24 +93,10 @@ Cursor/
 │   ├── privacy-guide-en.md        # English guide
 │   └── privacy-guide-de.md        # German guide
 │
-├── prompting/                     # Prompt Engineering (800+ lines)
-│   ├── README.md                  # Section overview
-│   ├── prompt-engineering-en.md   # English guide
-│   └── prompt-engineering-de.md   # German guide
-│
-├── rules/                         # Cursor Rules Collection
-│   ├── README.md                  # Installation guide
-│   ├── clean-code.mdc             # Clean code standards
-│   ├── documentation.mdc          # Documentation standards
-│   ├── testing.mdc                # Testing standards
-│   ├── python.mdc                 # Python best practices
-│   └── typescript.mdc             # TypeScript/React patterns
-│
-├── cheatsheet/                    # Quick Reference
-│   └── cursor-cheatsheet.md       # All shortcuts & commands
-│
-├── models/                        # Model Comparison
-│   └── model-comparison.md        # GPT-5 vs Claude vs Gemini
+├── prompting/                     # Prompt Engineering (based on OpenAI docs)
+│   ├── README.md                  # Section overview & verification
+│   ├── prompt-engineering-en.md   # English guide (with citations)
+│   └── prompt-engineering-de.md   # German guide (with citations)
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/

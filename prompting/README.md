@@ -2,8 +2,8 @@
 
 > Verified guides for GPT-5, Reasoning Models, and production-ready prompting techniques.
 
-![Quality Score](https://img.shields.io/badge/Quality%20Score-9.5%2F10-brightgreen)
-![Lines](https://img.shields.io/badge/Content-800%2B%20Lines-blue)
+![Quality Score](https://img.shields.io/badge/Quality%20Score-9.29%2F10-brightgreen)
+![Content](https://img.shields.io/badge/Content-2%20Guides%20EN%2BDE-blue)
 ![Verified](https://img.shields.io/badge/Verified-January%202026-blue)
 ![Sources](https://img.shields.io/badge/Sources-6%20Official%20OpenAI%20Docs-orange)
 
@@ -101,23 +101,16 @@ All content was extracted and verified from these official OpenAI resources:
 
 ---
 
-## Usage in Cursor IDE
+## XML Templates
 
-The XML templates in these guides are **directly copy-pasteable** into Cursor Rules:
+The guides contain XML-structured prompt templates from OpenAI's GPT-5 documentation:
 
-```xml
-<<context_gathering>>
-Goal: Get enough context fast. Parallelize discovery and stop as soon as you can act.
-Method:
-- Start broad, then fan out to focused subqueries.
-- Avoid over searching for context.
-Early stop criteria:
-- You can name exact content to change.
-- Top hits converge (~70%) on one area/path.
-<</context_gathering>>
-```
+- `<<context_gathering>>` - Control how the model gathers context
+- `<persistence>` - Configure agentic autonomy
+- `<<tool_preambles>>` - Improve UX during long tasks
+- `<<self_reflection>>` - Enable quality self-evaluation
 
-See the full guides for more templates including `<persistence>`, `<<tool_preambles>>`, and `<<self_reflection>>`.
+See the full guides for complete templates with examples.
 
 ---
 
