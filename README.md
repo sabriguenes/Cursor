@@ -86,6 +86,26 @@ Comprehensive guides with citations to official documentation.
 
 ---
 
+### [Cursor Rules Collection](rules/)
+
+> *Production-ready `.mdc` rules for Cursor IDE. Copy, paste, customize.*
+
+Rules that guide Cursor's AI behavior for consistent, high-quality code.
+
+| Language | Folder | Source |
+|----------|--------|--------|
+| **C++** | [rules/cpp/](rules/cpp/) | [Vinnie Falco](https://github.com/vinniefalco) |
+
+**What you'll get:**
+- C++ class layout and coding conventions
+- Javadoc/Doxygen documentation standards
+- CMake best practices (presets, no in-source builds)
+- Comment philosophy: explain WHY, not how
+
+*Based on rules from [cppalliance/coro-io-context](https://github.com/cppalliance/coro-io-context) with permission.*
+
+---
+
 ### [Setup Guides](resources/)
 
 > *New to Cursor? Start here.*
@@ -127,6 +147,18 @@ Cursor/
 │       ├── README.md              # Anthropic guide overview & verification
 │       ├── prompt-engineering-en.md   # English (with citations)
 │       └── prompt-engineering-de.md   # German (with citations)
+│
+├── rules/                         # Cursor Rules Collection (.mdc)
+│   ├── README.md                  # Overview & quick start
+│   └── cpp/                       # C++ rules (Vinnie Falco)
+│       ├── README.md              # C++ overview
+│       ├── cpp.mdc                # Coding conventions
+│       ├── cpp-comments.mdc       # Comment philosophy
+│       ├── cpp-javadoc.mdc        # Documentation standards
+│       ├── cmake.mdc              # CMake best practices
+│       ├── build.md               # Build command
+│       ├── commit.md              # Commit command
+│       └── fix.md                 # Fix command
 │
 ├── resources/                     # Setup Guides (for beginners)
 │   ├── README.md                  # Section overview

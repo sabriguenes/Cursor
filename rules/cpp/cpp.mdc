@@ -1,0 +1,70 @@
+---
+description: C++ class layout, coding conventions, and best practices
+globs: "**/*.{cpp,hpp,h,cc,cxx}"
+alwaysApply: false
+---
+
+# C++ Coding Conventions
+
+> Based on [Vinnie Falco's](https://github.com/vinniefalco) C++ rules from [cppalliance/coro-io-context](https://github.com/cppalliance/coro-io-context)
+
+## Class Layout
+
+- Private data members first
+- Public interface last
+- Destructor comes first in the public section
+- Use `struct` if all members are public, otherwise use `class`
+- Little to no ASCII-art dividers
+
+## Encapsulation
+
+- Never break encapsulation without explicit instruction
+- Prefer composition over inheritance where appropriate
+
+## Error Handling
+
+- Don't call `make_error_code` directly unless necessary
+- Idiomatic `boost::system::error_code` check is `ec.failed()`, not `ec` or `!!ec`
+- For `std::error_code`, use `if (ec)` or `ec.value() != 0`
+
+## Min/Max Protection
+
+- Always protect `min`/`max` with parentheses: `(std::min)(a, b)`
+- Include `<algorithm>` sparingly - it's costly
+- Don't include `<algorithm>` just for `min`/`max`
+
+## Testing
+
+- Always update the tests after changing code
+- Write unit tests for public headers in corresponding `.cpp` files
+- Test edge cases and error conditions
+
+## Example Class Layout
+
+```cpp
+class connection
+{
+    // Private data members first
+    socket socket_;
+    buffer buffer_;
+    bool connected_ = false;
+
+public:
+    // Destructor first
+    ~connection();
+
+    // Constructors
+    connection();
+    connection(connection&&) noexcept;
+    connection& operator=(connection&&) noexcept;
+
+    // Deleted operations
+    connection(connection const&) = delete;
+    connection& operator=(connection const&) = delete;
+
+    // Public interface
+    void connect(endpoint const& ep);
+    void disconnect();
+    bool is_connected() const noexcept;
+};
+```

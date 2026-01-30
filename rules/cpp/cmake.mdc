@@ -1,0 +1,101 @@
+---
+description: CMake best practices - use presets, avoid in-source builds
+globs: "**/CMakeLists.txt"
+alwaysApply: true
+---
+
+# CMake Build Configuration
+
+> Based on [Vinnie Falco's](https://github.com/vinniefalco) build rules from [cppalliance/coro-io-context](https://github.com/cppalliance/coro-io-context)
+
+## MANDATORY: Use CMake Presets
+
+**BEFORE running any cmake command:**
+
+1. Read `CMakePresets.json` or `CMakeUserPresets.json` in the target repo
+2. Use `cmake --preset <name>` with a preset from that file
+
+## Forbidden Commands
+
+These commands cause **in-source builds** and must NEVER be used:
+
+```bash
+# FORBIDDEN - causes in-source builds
+cmake .
+cmake -B .
+cmake -S . -B .
+cmake              # with no -B or --preset
+```
+
+Any cmake invocation from the source directory without `--preset` is forbidden.
+
+## Correct Pattern
+
+```bash
+# CORRECT - use presets
+cmake --preset <preset-name>
+cmake --build --preset <preset-name>
+
+# CORRECT - explicit out-of-source build
+cmake -S . -B build
+cmake --build build
+```
+
+## General Build Settings
+
+- Read `CMakeLists.txt` for compiler flags, standards, and dependencies
+- Never create ad-hoc build directories (`build-cmake/`, `mybuild/`, etc.)
+- Build artifacts must NEVER appear in source tree
+- Use the build directory structure defined by presets
+
+## Example Workflow
+
+```bash
+# 1. Check available presets
+cmake --list-presets
+
+# 2. Configure with a preset
+cmake --preset linux-gcc-debug
+
+# 3. Build with the same preset
+cmake --build --preset linux-gcc-debug
+
+# 4. Test (if CTest is configured)
+ctest --preset linux-gcc-debug
+```
+
+## Creating Presets
+
+If a project doesn't have presets, consider adding `CMakePresets.json`:
+
+```json
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "default",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        }
+    ]
+}
+```

@@ -1,0 +1,132 @@
+---
+description: Javadoc/Doxygen documentation style for C++ public APIs
+globs: "**/*.{hpp,h}"
+alwaysApply: false
+---
+
+# C++ Documentation Style (Javadoc/Doxygen)
+
+> Based on [Vinnie Falco's](https://github.com/vinniefalco) comprehensive documentation rules from [cppalliance/coro-io-context](https://github.com/cppalliance/coro-io-context)
+
+## What to Document
+
+- Fully document public APIs in headers using Javadoc (`/**` or `///`)
+- Never use `/* */` for doc comments (doesn't nest properly)
+- Document: classes, structs, unions, enums, using, typedef, functions, members, constants, concepts
+
+## What NOT to Document
+
+- Implementation details that repeat the code
+- Obvious things - only explain the WHY for non-obvious or surprising things
+
+## Brief Style
+
+Start the brief based on function category:
+
+| Category | Brief starts with |
+|----------|-------------------|
+| Accessor returning value | "Return" |
+| Predicate | "Check" / "Test" |
+| Mutator | Action verb |
+| Constructor | "Construct" |
+| Destructor | "Destroy" |
+| Conversion | "Convert" |
+| Factory | "Create" / "Make" |
+| Async initiator | "Asynchronously" + verb |
+
+## Section Order
+
+For full Javadocs, use this order (include only relevant sections):
+
+1. Brief (first line after `/**`, ends with period)
+2. Extended description
+3. `@par` sections: Preconditions, Effects, Postconditions, Exception Safety, Thread Safety, Complexity
+4. `@throws`
+5. `@note`
+6. `@par Example`
+7. `@tparam` (non-deduced template parameters only)
+8. `@param`
+9. `@return`
+10. `@see`
+
+## Exception Safety Guarantees
+
+| Guarantee | Meaning |
+|-----------|---------|
+| Nothrow | Never throws. Mark `noexcept`. |
+| Strong | If exception thrown, state unchanged (commit-or-rollback). |
+| Basic | If exception thrown, invariants preserved, no leaks, valid but unspecified state. |
+
+## Examples
+
+### Brief-only (trivial functions)
+
+```cpp
+/// Return true if the container is empty.
+bool empty() const noexcept;
+
+/// Return the number of elements.
+size_type size() const noexcept;
+
+/// Advance to the next element.
+iterator& operator++();
+```
+
+### Full Javadoc (non-trivial functions)
+
+```cpp
+/** Insert an element at the specified position.
+
+    Elements after the insertion point are shifted. Invalidates
+    iterators at or after the insertion point.
+
+    @par Exception Safety
+    Strong guarantee.
+
+    @par Complexity
+    Linear in the number of elements after `pos`.
+
+    @param pos Position before which the element will be inserted.
+    @param value The value to insert.
+
+    @return Iterator to the inserted element.
+
+    @throws std::bad_alloc If memory allocation fails.
+*/
+iterator insert(const_iterator pos, T const& value);
+```
+
+### Class documentation
+
+```cpp
+/** A thread pool for executing work concurrently.
+
+    Use this when you need to distribute CPU-bound tasks across
+    multiple threads without the overhead of creating and destroying
+    threads for each task.
+
+    @par Thread Safety
+    Distinct objects: Safe.
+    Shared objects: Safe.
+
+    @par Example
+    @code
+    thread_pool pool(4); // 4 worker threads
+    pool.post([] {
+        // work runs on pool thread
+    });
+    pool.join(); // wait for all work
+    @endcode
+*/
+class thread_pool;
+```
+
+## Tags
+
+Use `@` prefix (not `\`): `@param`, `@return`, `@pre`, `@post`, `@throws`, `@note`, `@see`, `@code`/`@endcode`, `@tparam`
+
+## Formatting
+
+- Use backticks for inline code: `size()`, `nullptr`, `std::vector`
+- Wrap lines around 80 characters
+- Indent continuation by 4 spaces

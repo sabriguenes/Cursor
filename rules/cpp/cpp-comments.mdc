@@ -1,0 +1,62 @@
+---
+description: C++ comment style - explain WHY, not how or what
+globs: "**/*.{cpp,hpp,h,cc,cxx}"
+alwaysApply: false
+---
+
+# C++ Comment Style
+
+> Based on [Vinnie Falco's](https://github.com/vinniefalco) rules from [cppalliance/coro-io-context](https://github.com/cppalliance/coro-io-context)
+
+## Core Principle
+
+**Comments explain the novel WHY, not how or what.**
+
+## Guidelines
+
+- Code should be self-documenting for the how/what
+- Keep comments short and focused
+- If the reason is obvious, no comment is needed
+- No line divider comments (avoid `//------` or `/*****`)
+
+## Good Examples
+
+```cpp
+// Pin to CPU to reduce cache thrashing on NUMA systems
+set_thread_affinity(thread_id_);
+
+// Check stop flag before blocking to avoid missed wakeups
+if (stop_.load(std::memory_order_acquire))
+    break;
+
+// Use relaxed ordering - exact count doesn't matter for logging
+counter_.fetch_add(1, std::memory_order_relaxed);
+```
+
+## Bad Examples
+
+```cpp
+// BAD: States the obvious
+// Increment the counter
+counter_++;
+
+// BAD: Describes what, not why
+// Loop through all items
+for (auto& item : items) { ... }
+
+// BAD: Unnecessary divider
+//============================================
+// Helper Functions
+//============================================
+```
+
+## When to Comment
+
+| Situation | Comment? |
+|-----------|----------|
+| Non-obvious performance optimization | Yes |
+| Workaround for bug/quirk | Yes |
+| Complex algorithm step | Maybe (prefer better naming) |
+| Standard library usage | No |
+| Variable declaration | No (use better names) |
+| Function that does what its name says | No |
