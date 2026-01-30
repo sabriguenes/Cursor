@@ -2,6 +2,8 @@
 
 Copy this content to `.cursorignore` in your project root.
 
+> **Note:** These patterns are general security best practices compiled from industry standards, not official Cursor recommendations. The `.cursorignore` file itself is an official Cursor feature that works like `.gitignore`. See [Cursor Docs](https://docs.cursor.com/context/ignore-files) for official documentation.
+
 ---
 
 ```gitignore
