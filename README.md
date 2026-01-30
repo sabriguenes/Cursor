@@ -86,6 +86,28 @@ Comprehensive guides with citations to official documentation.
 
 ---
 
+### [Setup Guides](resources/)
+
+> *New to Cursor? Start here.*
+
+Interactive prompts that walk you through setting up Git and GitHub.
+
+| Guide | Description |
+|-------|-------------|
+| [Set up Git on Mac](resources/setup-git-mac.md) | Install Git using Xcode Command Line Tools |
+| [Set up Git on Windows](resources/setup-git-windows.md) | Install Git using winget or the official installer |
+| [Verify My Setup](resources/verify-setup.md) | Check if Git, Node.js, and Python are configured correctly |
+| [Connect to GitHub](resources/connect-github.md) | Authenticate with GitHub CLI so you can push and pull |
+
+**How to use:**
+1. Copy the prompt from the guide you need
+2. Paste it into Cursor's chat
+3. Follow the AI's instructions step by step
+
+*Content adapted from [Agrim Singh's Cursor Setup Resources](https://www.agrimsingh.com/resources/)*
+
+---
+
 ## Repository Structure
 
 ```
@@ -105,6 +127,13 @@ Cursor/
 │       ├── README.md              # Anthropic guide overview & verification
 │       ├── prompt-engineering-en.md   # English (with citations)
 │       └── prompt-engineering-de.md   # German (with citations)
+│
+├── resources/                     # Setup Guides (for beginners)
+│   ├── README.md                  # Section overview
+│   ├── setup-git-mac.md           # Git installation on Mac
+│   ├── setup-git-windows.md       # Git installation on Windows
+│   ├── verify-setup.md            # Verify dev environment
+│   └── connect-github.md          # GitHub CLI authentication
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/
