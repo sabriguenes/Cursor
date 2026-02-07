@@ -35,6 +35,7 @@ AI-assisted development is transforming how we write software. But with great po
 - **For enterprises**: Understand the privacy implications before adopting AI tools
 - **For developers**: Master prompt engineering to 10x your productivity
 - **For teams**: Get actionable best practices, not marketing fluff
+- **For everyone**: Discover the best AI-powered developer tools
 
 Everything here is:
 - **Open source** - Use it, share it, improve it
@@ -106,6 +107,24 @@ Rules that guide Cursor's AI behavior for consistent, high-quality code.
 
 ---
 
+### [Tools & Resources](tools/)
+
+> *Curated guides to the best AI-powered developer tools.*
+
+Opinionated, well-researched overviews of tools that are changing how developers work.
+
+| Guide | Description |
+|-------|-------------|
+| [AI Code Search Tools](tools/ai-code-search-tools.md) | The definitive guide to AI-powered code search — Greptile, Bloop, Phind, Sourcegraph & more |
+
+**What you'll learn:**
+- Chat with your codebase: Greptile (cloud) vs Bloop (local/privacy-first)
+- Search the web for code: Phind, AI GitHub Search
+- Enterprise solutions: Sourcegraph + Cody, GitHub Code Search
+- Hidden gems: Cursor @Codebase, Sturdy CLI, Zilliz/SolidGPT
+
+---
+
 ### [Setup Guides](resources/)
 
 > *New to Cursor? Start here.*
@@ -166,6 +185,10 @@ Cursor/
 │   ├── setup-git-windows.md       # Git installation on Windows
 │   ├── verify-setup.md            # Verify dev environment
 │   └── connect-github.md          # GitHub CLI authentication
+│
+├── tools/                         # Tools & Resources (curated guides)
+│   ├── README.md                  # Section overview
+│   └── ai-code-search-tools.md   # AI Code Search Tools guide
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/
