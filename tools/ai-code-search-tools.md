@@ -190,7 +190,7 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 - Paste any public GitHub repository URL and start asking questions
 - AI-powered (Cerebras) — not just search, but conversational understanding
 - Clones the repo in a sandbox, greps for context, then uses AI to answer
-- Works like a lightweight, instant version of Greptile — no account needed
+- No account needed — just paste a URL and start chatting
 
 **When to use it:** You found a repo and want to understand it fast. Paste the URL, ask "How does auth work here?" and get an answer in seconds.
 
@@ -223,7 +223,7 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 | **Cost** | Free (limited) / Paid |
 
 **What it does:**
-- Searches the **actual source code of 519+ million live web pages**
+- Searches the **actual source code of 516+ million live web pages**
 - Find which websites use a specific library, analytics ID, ad network, or code pattern
 - Regex support for advanced queries
 - Not GitHub repos — this searches deployed, production website code
@@ -327,7 +327,7 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 | Search across GitHub + GitLab + Bitbucket | **SearchCode** | Rebooting |
 | Have AI search built into my editor | **Cursor** (@Codebase) | Active |
 | Search from the terminal | **Sturdy `sem`** | Unmaintained |
-| Build my own code search | **Zilliz / Milvus** | Active |
+| Build my own code search | **Zilliz / SolidGPT** | Active |
 
 ---
 
