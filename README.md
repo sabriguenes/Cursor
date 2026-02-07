@@ -115,14 +115,15 @@ Opinionated, well-researched overviews of tools that are changing how developers
 
 | Guide | Description |
 |-------|-------------|
-| [AI Code Search Tools](tools/ai-code-search-tools.md) | The definitive guide to AI-powered code search — Greptile, Bloop, Phind, Sourcegraph & more |
+| [AI Code Search Tools](tools/ai-code-search-tools.md) | The definitive guide to AI-powered code search — Greptile, Perplexity, Sourcegraph, grepai & more |
 
 **What you'll learn:**
-- Chat with your codebase: Greptile (cloud) vs Bloop (local/privacy-first)
-- Search the web for code: Phind, AI GitHub Search
-- Zero-install web tools: Grep.app, Repogrep, GitSeek, PublicWWW, SearchCode
-- Enterprise solutions: Sourcegraph + Cody, GitHub Code Search
-- Hidden gems: Cursor @Codebase, Sturdy CLI, Zilliz/SolidGPT
+- AI code review: Greptile (PR reviews with full codebase context)
+- Local code search: grepai (open source, privacy-first, MCP integration)
+- Search the web for code: Perplexity, AI GitHub Search
+- Zero-install web tools: Grep.app, Repogrep, GitSeek, PublicWWW
+- Enterprise solutions: Sourcegraph Code Search + Cody Enterprise, GitHub Code Search
+- Built into your editor: Cursor @Codebase
 
 ---
 

@@ -12,47 +12,54 @@ This guide categorizes the best AI code search tools by use case, so you can pic
 
 ---
 
-## 1. Chat With Your Codebase
+## 1. AI Code Review & Codebase Intelligence
 
-> *"Where is the authentication logic?" — Ask your repo in plain English.*
+> *Automated PR reviews and codebase Q&A — powered by full repository context.*
 
-These tools index your entire codebase and let you query it conversationally. They understand relationships across files, modules, and services.
+These tools build a deep understanding of your entire codebase and use it to review code, catch bugs, and answer questions.
 
 ### Greptile
 
 | | |
 |---|---|
 | **Website** | [greptile.com](https://greptile.com) |
-| **Best for** | Asking questions about your entire repository |
+| **Best for** | AI-powered PR reviews with full codebase context |
 | **Deployment** | Cloud & Self-Hosted |
-| **IDE Support** | VS Code Extension |
+| **Integration** | GitHub & GitLab (bot) |
+| **Pricing** | $30/developer/month |
 
 **What it does:**
-- Index your repo and ask questions like *"How does the payment flow work?"*
-- Automated PR reviews with full codebase context
-- Bug detection that understands cross-file dependencies
-- Connects the dots between services, APIs, and data models
+- Automatically reviews pull requests in GitHub and GitLab with full codebase context
+- In-line comments that identify bugs, anti-patterns, and security issues
+- AI-generated PR summaries with mermaid diagrams and confidence scores
+- Custom rules: describe your coding standards in English, Greptile enforces them
+- Learning: infers your team's conventions from PR comments and reactions over time
+- Connects Jira, Notion, and Google Docs via MCP for additional context
 
-**When to use it:** You want a deep understanding of your codebase without reading every file. Perfect for onboarding, audits, and large-scale refactoring.
+**When to use it:** You want automated, context-aware code reviews on every PR. Trusted by 1,000+ teams including Stripe. SOC 2 compliant with self-hosted option for air-gapped environments.
 
 ---
 
-### Bloop
+### ~~Bloop~~ (Discontinued)
+
+> **Status: Discontinued.** Bloop's GitHub repo was [archived on January 2, 2025](https://github.com/BloopAI/bloop). The company pivoted to building AI agent orchestration tools ("Vibe Kanban"). The original code search product no longer exists. For a local, privacy-first alternative, see **grepai** below.
+
+### grepai
 
 | | |
 |---|---|
-| **Website** | [bloop.ai](https://bloop.ai) |
-| **Best for** | Fast, privacy-first code search with natural language |
-| **Deployment** | Desktop (local) & Cloud |
-| **IDE Support** | Standalone app |
+| **Website** | [github.com/yoanbernabeu/grepai](https://github.com/yoanbernabeu/grepai) |
+| **Best for** | Local semantic code search with AI — open source, privacy-first |
+| **Deployment** | CLI + MCP server (runs 100% locally with Ollama) |
+| **IDE Support** | MCP integration (Cursor, Claude Code, Windsurf) |
 
 **What it does:**
-- "ChatGPT for your code" — ask questions, get answers with file references
-- Runs entirely locally (no data leaves your machine)
-- Combines natural language search with blazing-fast regex
-- Understands code structure, not just text patterns
+- Open-source semantic code search that runs entirely on your machine
+- Uses Ollama for local embeddings — no data leaves your computer
+- Real-time indexing with call graph tracing across multiple languages
+- MCP server integration for AI agents (Cursor, Claude Code, Windsurf)
 
-**When to use it:** You want Greptile-level intelligence but need to keep everything local. Great for air-gapped environments or privacy-sensitive projects.
+**When to use it:** You want Bloop-level local intelligence but need an actively maintained, open-source tool. Perfect for privacy-sensitive projects and AI agent workflows.
 
 ---
 
@@ -62,22 +69,27 @@ These tools index your entire codebase and let you query it conversationally. Th
 
 These tools search the internet, documentation, and public GitHub repositories simultaneously — then synthesize the answer for you.
 
-### Phind
+### ~~Phind~~ (Discontinued)
+
+> **Status: Shut down.** Phind ceased operations on January 16, 2026. The service is no longer available.
+
+### Perplexity
 
 | | |
 |---|---|
-| **Website** | [phind.com](https://phind.com) |
-| **Best for** | Google for developers — search the web + docs + GitHub at once |
-| **Deployment** | Web app |
-| **IDE Support** | VS Code Extension |
+| **Website** | [perplexity.ai](https://perplexity.ai) |
+| **Best for** | AI search engine that searches the web, docs, and GitHub — with citations |
+| **Deployment** | Web app, iOS, Android |
+| **IDE Support** | API, MCP server |
 
 **What it does:**
-- Searches the internet, official documentation, and GitHub simultaneously
-- Generates a synthesized answer with source citations
+- Searches the internet, documentation, and GitHub simultaneously — then synthesizes an answer
+- Every response includes source citations so you can verify
 - Understands technical context better than general-purpose search engines
-- Pair programming mode for follow-up questions
+- Follow-up questions with full conversation context
+- API and MCP server available for integration into developer workflows
 
-**When to use it:** You need to find a solution that exists somewhere on the internet — Stack Overflow, GitHub issues, blog posts, official docs — and want one coherent answer instead of 10 blue links.
+**When to use it:** You need to find a solution that exists somewhere on the internet — Stack Overflow, GitHub issues, blog posts, official docs — and want one coherent answer instead of 10 blue links. The spiritual successor to Phind.
 
 ---
 
@@ -102,22 +114,25 @@ These tools search the internet, documentation, and public GitHub repositories s
 
 > *Built for teams managing millions of lines of code.*
 
-### Sourcegraph + Cody
+### Sourcegraph Code Search + Cody Enterprise
 
 | | |
 |---|---|
 | **Website** | [sourcegraph.com](https://sourcegraph.com) |
 | **Best for** | Enterprise-scale code search across millions of repositories |
-| **Deployment** | Cloud & Self-Hosted |
-| **IDE Support** | VS Code, JetBrains, Neovim |
+| **Deployment** | Cloud (single-tenant) & Self-Hosted |
+| **IDE Support** | VS Code, JetBrains (Cody Enterprise) |
+| **Pricing** | $49/user/month (Code Search), custom (Cody Enterprise) |
 
 **What it does:**
 - The most powerful code search engine in existence — searches across millions of repos
-- **Cody** (AI assistant) explains code, suggests refactors, and answers questions
+- **Cody Enterprise** (AI assistant) explains code, suggests refactors, and answers questions with deep multi-repo context
 - Cross-repository navigation: jump between services, trace dependencies
 - Code intelligence: find references, go to definition, across repo boundaries
 
-**When to use it:** Your organization has a large, multi-repo codebase and needs institutional-grade search and AI assistance. The gold standard for enterprises.
+**Important (2025 update):** Cody Free and Cody Pro plans were **discontinued in July 2025**. Only **Cody Enterprise** remains for organizations. For individuals and small teams, Sourcegraph now offers **[Amp](https://sourcegraph.com)** — a new agentic coding tool with a free tier and credit-based access.
+
+**When to use it:** Your organization has a large, multi-repo codebase and needs institutional-grade search and AI assistance. The gold standard for enterprises. Individual developers should look at Amp instead.
 
 ---
 
@@ -231,7 +246,7 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 - Supports 378+ programming languages
 - Free API for automation
 
-**When to use it:** You want to search across multiple platforms at once, not just GitHub. Currently being rebooted with improvements.
+**When to use it:** You want to search across multiple platforms at once, not just GitHub. **Note:** SearchCode is currently shutting down / being rebooted — check their site for status updates.
 
 ---
 
@@ -244,31 +259,38 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 | | |
 |---|---|
 | **Website** | [cursor.com](https://cursor.com) |
-| **Best for** | AI code editor that indexes your project for contextual assistance |
+| **Best for** | AI code editor with built-in semantic codebase search |
 | **Deployment** | Desktop (VS Code fork) |
+| **Docs** | [Cursor @Codebase docs](https://docs.cursor.com/context/@-symbols/@-codebase) |
 
 **What it does:**
-- The `@Codebase` feature indexes your entire project and makes it available to AI
-- Ask questions about your code while editing — context-aware completions and chat
-- Many developers are switching to Cursor as their primary editor specifically for this feature
+- Cursor automatically indexes your project using embeddings stored in a vector database
+- Type `@Codebase` in chat to trigger semantic search — it gathers relevant files, reranks by relevance, reasons through a plan, then generates a response
+- Context-aware completions, chat, and inline edits powered by your full project context
+- Also supports `@Files`, `@Folders`, `@Docs`, `@Web`, and other context symbols
 
-**When to use it:** You want code search deeply integrated into your editor workflow, not as a separate tool.
+**When to use it:** You want code search deeply integrated into your editor workflow, not as a separate tool. The `@Codebase` feature is one of the main reasons developers switch to Cursor.
 
 ---
 
-### Sturdy (CLI)
+### Sturdy `sem` CLI (Unmaintained)
 
 | | |
 |---|---|
+| **Website** | [github.com/sturdy-dev/semantic-code-search](https://github.com/sturdy-dev/semantic-code-search) |
 | **Best for** | Local semantic code search from the terminal |
-| **Deployment** | CLI tool |
+| **Deployment** | CLI tool (`pip install semantic-code-search`) |
+| **Status** | Last updated December 2022 — likely abandoned |
 
 **What it does:**
-- Semantic search for your local codebase, directly from the command line
+- Semantic search for your local codebase via the `sem` command
 - No cloud, no accounts — just install and search
-- Understands code meaning, not just string matching
+- Uses sentence-transformer embeddings to understand code meaning
+- Supports Python, JavaScript, TypeScript, Go, Rust, Java, C/C++, Kotlin, Ruby
 
-**When to use it:** You live in the terminal and want AI-powered search without leaving it.
+**Limitations:** The `.embeddings` index does not auto-update when files change. Only 366 GitHub stars, 4 unanswered PRs. For an actively maintained alternative, see **grepai** (Section 1) or **sgrep**.
+
+**When to use it:** You live in the terminal and want a quick semantic search experiment — but be aware this tool has not been updated in over 3 years.
 
 ---
 
@@ -290,21 +312,22 @@ These are pure browser-based tools — go to the URL, paste a repo or type a que
 
 ## Quick Reference: Which Tool Should I Use?
 
-| I want to... | Use this |
-|---|---|
-| Ask questions about my own repo | **Greptile** (cloud) or **Bloop** (local) |
-| Search for code/solutions across the internet | **Phind** |
-| Find GitHub repos by description | **AI GitHub Search** |
-| Search code at enterprise scale | **Sourcegraph + Cody** |
-| Search directly on GitHub | **GitHub Code Search** |
-| Grep any public repo in the browser | **Grep.app** (by Vercel) |
-| Paste a repo URL and chat with it | **Repogrep** |
-| Extract code from a repo for AI tools | **GitSeek** |
-| Search code on live websites | **PublicWWW** |
-| Search across GitHub + GitLab + Bitbucket | **SearchCode** |
-| Have AI search built into my editor | **Cursor** (@Codebase) |
-| Search from the terminal | **Sturdy** |
-| Build my own code search | **Zilliz / SolidGPT** |
+| I want to... | Use this | Status |
+|---|---|---|
+| Get AI-powered PR reviews | **Greptile** | Active |
+| Search my codebase locally with AI | **grepai** (open source, local) | Active |
+| Search for code/solutions across the internet | **Perplexity** | Active |
+| Find GitHub repos by description | **AI GitHub Search** | Active |
+| Search code at enterprise scale | **Sourcegraph Code Search + Cody Enterprise** | Active (Enterprise only) |
+| Search directly on GitHub | **GitHub Code Search** | Active |
+| Grep any public repo in the browser | **Grep.app** (by Vercel) | Active |
+| Paste a repo URL and chat with it | **Repogrep** | Active |
+| Extract code from a repo for AI tools | **GitSeek** | Active |
+| Search code on live websites | **PublicWWW** | Active |
+| Search across GitHub + GitLab + Bitbucket | **SearchCode** | Rebooting |
+| Have AI search built into my editor | **Cursor** (@Codebase) | Active |
+| Search from the terminal | **Sturdy `sem`** | Unmaintained |
+| Build my own code search | **Zilliz / Milvus** | Active |
 
 ---
 
