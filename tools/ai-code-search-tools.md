@@ -139,7 +139,103 @@ These tools search the internet, documentation, and public GitHub repositories s
 
 ---
 
-## 4. Hidden Gems & Specialist Tools
+## 4. Zero-Install Web Tools
+
+> *Just open the website and search. No signup, no extension, no CLI.*
+
+These are pure browser-based tools — go to the URL, paste a repo or type a query, get results. The fastest way to search code without installing anything.
+
+### Grep.app (by Vercel)
+
+| | |
+|---|---|
+| **Website** | [grep.app](https://grep.app) |
+| **Best for** | Lightning-fast regex search across all public GitHub repos |
+| **Cost** | Free |
+
+**What it does:**
+- Full-text and regex search across **any public GitHub repository** — no pre-indexing needed
+- Search a specific repo via `grep.app/owner/repo` or search globally
+- Instant results with syntax highlighting
+- Also available as an MCP server for AI agent integration
+
+**When to use it:** You want to quickly grep through any public repo without cloning it. The fastest "just search it" experience on the web.
+
+---
+
+### Repogrep
+
+| | |
+|---|---|
+| **Website** | [app.ami.dev/repogrep](https://app.ami.dev/repogrep) |
+| **Best for** | Paste a GitHub URL, chat with the code using AI |
+| **Cost** | Free |
+
+**What it does:**
+- Paste any public GitHub repository URL and start asking questions
+- AI-powered (Cerebras) — not just search, but conversational understanding
+- Clones the repo in a sandbox, greps for context, then uses AI to answer
+- Works like a lightweight, instant version of Greptile — no account needed
+
+**When to use it:** You found a repo and want to understand it fast. Paste the URL, ask "How does auth work here?" and get an answer in seconds.
+
+---
+
+### GitSeek
+
+| | |
+|---|---|
+| **Website** | [gitseek.dev](https://gitseek.dev) |
+| **Best for** | Extract specific code from any repo for AI workflows |
+| **Cost** | Free tier available |
+
+**What it does:**
+- Paste a repo URL and describe what code you need in natural language
+- AI finds and extracts complete, relevant files — optimized for copying into Claude, Cursor, or ChatGPT
+- Project architecture visualization
+- API available for automation
+
+**When to use it:** You want to pull specific code from a repo to feed into your AI tool of choice. Built for the "find it, copy it, paste it into AI" workflow.
+
+---
+
+### PublicWWW
+
+| | |
+|---|---|
+| **Website** | [publicwww.com](https://publicwww.com) |
+| **Best for** | Searching source code of live websites (HTML, JS, CSS) |
+| **Cost** | Free (limited) / Paid |
+
+**What it does:**
+- Searches the **actual source code of 519+ million live web pages**
+- Find which websites use a specific library, analytics ID, ad network, or code pattern
+- Regex support for advanced queries
+- Not GitHub repos — this searches deployed, production website code
+
+**When to use it:** You want to know "which websites use library X?" or "who has this tracking pixel?" — reverse-engineering the live web, not repositories.
+
+---
+
+### SearchCode
+
+| | |
+|---|---|
+| **Website** | [searchcode.com](https://searchcode.com) |
+| **Best for** | Cross-platform code search (GitHub + GitLab + Bitbucket) |
+| **Cost** | Free |
+
+**What it does:**
+- Indexes public code across GitHub, GitLab, and Bitbucket simultaneously
+- Search by function name, variable, API call, or any code pattern
+- Supports 378+ programming languages
+- Free API for automation
+
+**When to use it:** You want to search across multiple platforms at once, not just GitHub. Currently being rebooted with improvements.
+
+---
+
+## 5. Hidden Gems & Specialist Tools
 
 > *For developers who want the cutting edge.*
 
@@ -201,6 +297,11 @@ These tools search the internet, documentation, and public GitHub repositories s
 | Find GitHub repos by description | **AI GitHub Search** |
 | Search code at enterprise scale | **Sourcegraph + Cody** |
 | Search directly on GitHub | **GitHub Code Search** |
+| Grep any public repo in the browser | **Grep.app** (by Vercel) |
+| Paste a repo URL and chat with it | **Repogrep** |
+| Extract code from a repo for AI tools | **GitSeek** |
+| Search code on live websites | **PublicWWW** |
+| Search across GitHub + GitLab + Bitbucket | **SearchCode** |
 | Have AI search built into my editor | **Cursor** (@Codebase) |
 | Search from the terminal | **Sturdy** |
 | Build my own code search | **Zilliz / SolidGPT** |

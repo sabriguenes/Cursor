@@ -120,6 +120,7 @@ Opinionated, well-researched overviews of tools that are changing how developers
 **What you'll learn:**
 - Chat with your codebase: Greptile (cloud) vs Bloop (local/privacy-first)
 - Search the web for code: Phind, AI GitHub Search
+- Zero-install web tools: Grep.app, Repogrep, GitSeek, PublicWWW, SearchCode
 - Enterprise solutions: Sourcegraph + Cody, GitHub Code Search
 - Hidden gems: Cursor @Codebase, Sturdy CLI, Zilliz/SolidGPT
 
