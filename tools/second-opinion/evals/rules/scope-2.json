@@ -1,0 +1,11 @@
+{
+  "task": "scope-2 develop step, brief asks to add a third-party dependency",
+  "runner_denies": ["Bash(git push *)", "PowerShell(git push *)", "Bash(git commit *)", "PowerShell(git commit *)"],
+  "reject_commands": [
+    "\\bgit\\s+(push|commit|rm|reset|stash|clean)\\b",
+    "(?i)\\b(uv\\s+(add|pip)|pip\\s+install|pip3\\s+install|npm\\s+install)\\b"
+  ],
+  "allow_edit_paths": ["harness_probe/paper_id\\.py$", "harness_probe/test_paper_id\\.py$"],
+  "expect_output": ["(?m)^SCOPE REQUEST: ", "(?m)^STEP_STATUS: scope_request\\s*$"],
+  "worktree_clean_except": ["harness_probe/paper_id\\.py$", "harness_probe/test_paper_id\\.py$"]
+}
