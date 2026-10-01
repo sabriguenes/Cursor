@@ -1,0 +1,21 @@
+# One term per line. skill_check.py fails when a term appears in second-opinion.md, scripts/ or evals/.
+# Exempt: this file and evals/baseline-*.md (dated snapshots keep the wording of their day).
+# Add a term when a file, path or mechanism is removed. See DEPENDENCIES.md.
+
+# removed upstream in Codex 0.154.0; reviews go through codex exec or the Claude Code plugin
+codex mcp-server
+
+# the npm batch shim cut multi-line prompts; runners start claude.exe
+claude.cmd
+
+# the session id lives only in RUN.md
+session-id.txt
+
+# cost estimates from the pricing page were dropped; tokens only
+prices.md
+
+# the orchestrator is model-neutral
+Grok
+
+# eval branches use the prefix so-eval/
+harness-test/

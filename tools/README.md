@@ -6,11 +6,19 @@ Opinionated, well-researched overviews of tools that are changing how developers
 
 ---
 
-## Available Guides
+## Guides
 
 | Guide | Description |
 |-------|-------------|
 | [AI Code Search Tools](ai-code-search-tools.md) | The definitive guide to AI-powered code search — from chatting with your repo to searching the entire web |
+
+## Cursor Harness
+
+Tools that drive several agents from Cursor. Overview: [cursor-harness](cursor-harness/).
+
+| Tool | Description |
+|------|-------------|
+| [second-opinion](cursor-harness/second-opinion/) | A tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only; also PR review and module sweep (Windows) |
 
 ---
 
