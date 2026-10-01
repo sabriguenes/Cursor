@@ -19,6 +19,8 @@ Quality: measured and compared with the last baseline. A drop is reported, not a
 
 ## Quality
 
+The task 5 detection rate is biased: in the baseline series and in the 1.0.0 acceptance, the branch and base names in the prompts contained `pr-seeded` (in the series also the worktree path), which tells both reviewers that defects were planted. The task 5 rows below hold only until task 5 is rerun with neutral names; that rerun becomes the new baseline. Golden checks and task 6 are not affected.
+
 | Measure | Applies to | Baseline 2026-10-01 |
 |---|---|---|
 | Seeded bugs found by Opus | task 5 (3), task 6 (1) | 3 of 3, 1 of 1 |

@@ -37,7 +37,7 @@ description: Second opinion on code changes with Opus and Codex. Use only when i
 disable-model-invocation: true
 ---
 
-Read <absolute path of your clone>/tools/second-opinion/second-opinion.md in full and follow it.
+Read <absolute path of your clone>/tools/cursor-harness/second-opinion/second-opinion.md in full and follow it.
 ```
 
 Then type `/second-opinion` in Agent chat. The skill only points at the cloned file, so `git pull` in the clone updates it. User-level skills in `~/.cursor/skills/` and `disable-model-invocation` are documented at [cursor.com/docs/context/skills](https://cursor.com/docs/context/skills).
@@ -46,7 +46,7 @@ No command file is shipped.
 
 ## First run
 
-1. `python -B tools/second-opinion/scripts/doctor.py` (from the clone). Every line `ok`, exit 0. It prints whether you are logged in and how, never who.
+1. `python -B tools/cursor-harness/second-opinion/scripts/doctor.py` (from the clone). Every line `ok`, exit 0. It prints whether you are logged in and how, never who.
 2. In the target repo, start with a small task. The run folder appears under `.second-opinion/runs/` in the target repo; the tool adds `/.second-opinion/` to `.git/info/exclude`, so `git status` stays clean and no tracked file changes.
 
 ## Repo rules for Opus: CLAUDE.local.md
@@ -79,4 +79,5 @@ Source: [Claude Code memory docs](https://code.claude.com/docs/en/memory): `CLAU
 - Windows with PowerShell only; nothing is claimed for macOS or Linux.
 - The develop gate needs Cursor's plan mode.
 - Both CLIs bill against your own subscriptions or keys; the tool records Codex tokens but computes no cost.
+- Files outside the repo: the CLIs keep their own records. Opus in plan mode may write a plan file under `~/.claude/plans/`; the Claude CLI keeps session logs under `~/.claude`, the Codex CLI under `~/.codex/sessions`. The tool never touches either; remove them yourself if you want no traces.
 - Tasks 1 to 4 of the evals need a human at the gate and are not part of the automated acceptance.

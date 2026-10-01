@@ -37,7 +37,7 @@ description: Second opinion on code changes with Opus and Codex. Use only when i
 disable-model-invocation: true
 ---
 
-Read <absoluter Pfad deines Klons>/tools/second-opinion/second-opinion.md in full and follow it.
+Read <absoluter Pfad deines Klons>/tools/cursor-harness/second-opinion/second-opinion.md in full and follow it.
 ```
 
 Dann im Agent-Chat `/second-opinion` tippen. Der Skill zeigt nur auf die geklonte Datei, `git pull` im Klon aktualisiert ihn also. Benutzer-Skills in `~/.cursor/skills/` und `disable-model-invocation` beschreibt [cursor.com/docs/context/skills](https://cursor.com/docs/context/skills).
@@ -46,7 +46,7 @@ Eine Command-Datei wird nicht mitgeliefert.
 
 ## Erster Lauf
 
-1. `python -B tools/second-opinion/scripts/doctor.py` (im Klon). Jede Zeile `ok`, Exit 0. Es meldet, ob und wie du angemeldet bist, nie als wer.
+1. `python -B tools/cursor-harness/second-opinion/scripts/doctor.py` (im Klon). Jede Zeile `ok`, Exit 0. Es meldet, ob und wie du angemeldet bist, nie als wer.
 2. Im Ziel-Repo mit einer kleinen Aufgabe beginnen. Der Run-Ordner entsteht unter `.second-opinion/runs/` im Ziel-Repo; das Tool trägt `/.second-opinion/` in `.git/info/exclude` ein, `git status` bleibt also sauber und keine versionierte Datei ändert sich.
 
 ## Repo-Regeln für Opus: CLAUDE.local.md
@@ -79,4 +79,5 @@ Quelle: [Claude-Code-Doku zu Memory](https://code.claude.com/docs/en/memory): `C
 - Nur Windows mit PowerShell; für macOS und Linux wird nichts behauptet.
 - Die develop-Freigabe braucht den Plan-Modus von Cursor.
 - Beide CLIs rechnen über deine eigenen Abos oder Schlüssel ab; das Tool notiert Codex-Tokens, rechnet aber keine Kosten aus.
+- Dateien außerhalb des Repos: Die CLIs führen eigene Aufzeichnungen. Opus kann im Plan-Modus eine Plandatei unter `~/.claude/plans/` schreiben; die Claude-CLI legt Sitzungsprotokolle unter `~/.claude` ab, die Codex-CLI unter `~/.codex/sessions`. Das Tool fasst beides nie an; wer keine Reste will, entfernt sie selbst.
 - Aufgaben 1 bis 4 der Evals brauchen einen Menschen an der Freigabe und sind nicht Teil der automatischen Abnahme.

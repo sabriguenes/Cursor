@@ -18,5 +18,6 @@ Read this file before changing anything in the tool folder. Run `python -B scrip
 | the off-limits rule for `evals/` | binding rule 1 in `second-opinion.md`, `evals/README.md`, the leak check in `scripts/make_prompt.py` |
 | the eval template, a seed or a task | `evals/tasks.md`, `evals/seeded-bugs.md` (line numbers), `evals/rules/`, `evals/expectations.md` |
 | the install paths | `README.md` and `README.de.md` together |
+| the tool folder's place in this repo | the clone paths in `README.md` and `README.de.md` (skill pointer, doctor command), the parent `../README.md`, `tools/README.md` and the repo's root `README.md`; the tool itself resolves its folder at run time |
 
 Snapshots: `evals/baseline-*.md` are dated. They stay complete in themselves and change only through a dated addendum; a new series gets a new file.
