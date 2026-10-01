@@ -11,6 +11,7 @@ Opinionated, well-researched overviews of tools that are changing how developers
 | Guide | Description |
 |-------|-------------|
 | [AI Code Search Tools](ai-code-search-tools.md) | The definitive guide to AI-powered code search — from chatting with your repo to searching the entire web |
+| [second-opinion](second-opinion/) | A tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only; also PR review and module sweep (Windows) |
 
 ---
 

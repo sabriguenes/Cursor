@@ -116,6 +116,7 @@ Opinionated, well-researched overviews of tools that are changing how developers
 | Guide | Description |
 |-------|-------------|
 | [AI Code Search Tools](tools/ai-code-search-tools.md) | The definitive guide to AI-powered code search — Greptile, Perplexity, Sourcegraph, grepai & more |
+| [second-opinion](tools/second-opinion/) | A tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only |
 
 **What you'll learn:**
 - AI code review: Greptile (PR reviews with full codebase context)
@@ -124,6 +125,7 @@ Opinionated, well-researched overviews of tools that are changing how developers
 - Zero-install web tools: Grep.app, Repogrep, GitSeek, PublicWWW
 - Enterprise solutions: Sourcegraph Code Search + Cody Enterprise, GitHub Code Search
 - Built into your editor: Cursor @Codebase
+- Two models on one change: second-opinion (Opus implements, Codex reviews read-only, you decide at the gate)
 
 ---
 
@@ -190,7 +192,12 @@ Cursor/
 │
 ├── tools/                         # Tools & Resources (curated guides)
 │   ├── README.md                  # Section overview
-│   └── ai-code-search-tools.md   # AI Code Search Tools guide
+│   ├── ai-code-search-tools.md   # AI Code Search Tools guide
+│   └── second-opinion/            # Tool file: Opus implements, Codex reviews
+│       ├── second-opinion.md      # The tool file (@-mention it)
+│       ├── README.md / README.de.md   # Install and usage (EN / DE)
+│       ├── scripts/               # CLI runners, watchdog, doctor, graders
+│       └── evals/                 # Regression tasks and baseline
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/
