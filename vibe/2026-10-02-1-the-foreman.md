@@ -553,7 +553,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-7>
 
-### Step 7: Foreman READMEs with Setup and Limits
+### Step 7: Foreman READMEs with Setup and Limits [completed]
 
 - Component: user-docs
 
