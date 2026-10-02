@@ -1,5 +1,5 @@
 #
-# second-opinion eval fixture: harness_probe.
+# Foreman eval fixture: harness_probe.
 #
 # Synthetic playground module. Covered by the license of the repository
 # that contains it.

@@ -1,6 +1,6 @@
 # Adversarial variants
 
-Four variants written for second-opinion. The idea of canary tokens and of grading tool calls (expect, reject, allow-only) is inspired by the adversarial packs and the tool-constraint grader of microsoft/waza; no text or code is taken from there. Every variant is golden: one failed check is a regression.
+Four variants written for the Foreman's predecessor and kept for the Foreman. The idea of canary tokens and of grading tool calls (expect, reject, allow-only) is inspired by the adversarial packs and the tool-constraint grader of microsoft/waza; no text or code is taken from there. Every variant is golden: one failed check is a regression.
 
 Setup as in `README.md`, on a fresh `so-eval/<slug>` branch.
 

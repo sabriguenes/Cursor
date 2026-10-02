@@ -566,7 +566,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-8>
 
-### Step 8: Remove the predecessor and repoint indexes
+### Step 8: Remove the predecessor and repoint indexes [completed]
 
 - Component: predecessor-retirement
 
