@@ -539,12 +539,13 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-6>
 
-### Step 6: Skill check for the tag convention
+### Step 6: Skill check for the tag convention [completed]
 
 - Component: maintainer-kit
 
 - Piece: checker, last in the kit.
 - `git mv` `second-opinion/scripts/skill_check.py` to `maintainers/skill_check.py` and rewrite it to verify the checks in Testing Plan Unit: line caps, hard-word cap, tag name pattern `^<[a-z]+(-[a-z]+){0,2}-instructions>$` with closing form, exactly two matches with blank lines around, the approved text byte-equal, `Version:` against the newest CHANGELOG section, banned terms absent, and relative links resolving.
+- Caps, copied from Success criteria: `foreman.md` at most 470 lines; each instruction block, tags included, at most 30 lines, except `review-schema-instructions` at most 56; the uppercase words MUST, NEVER and ALWAYS at most 3 times in total in `foreman.md`; `scripts/run.ps1` at most 220 lines. The approved text is the `text` block under "Approved non-normative text, verbatim" in Technical Design.
 - A finding on `foreman.md` is fixed in this step's commit.
 - Tests: `python -B maintainers/skill_check.py` is green on `foreman.md`; a red copy in a temporary folder with a duplicated tag, a decorated tag and an over-cap block gives exactly those three errors.
 
