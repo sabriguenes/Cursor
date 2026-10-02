@@ -498,7 +498,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-3>
 
-### Step 3: Call script with watchdog and self-test
+### Step 3: Call script with watchdog and self-test [completed]
 
 - Component: call-script
 
