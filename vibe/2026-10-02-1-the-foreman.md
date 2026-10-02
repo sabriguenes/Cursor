@@ -437,7 +437,7 @@ The Foreman is a fresh build. The predecessor is source material only. Its rules
 - Status: complete
 - Build command: None. No build manifest at the root (no `pyproject.toml`, `package.json`, `Makefile`, or CI workflow outside `evals/fixtures/`).
 - Focused test command pattern: `python -B .git/vibe-scratch/step_check_<N>.py` from the repo root. The coding sub-agent of step N writes this script first (it checks exactly the step's Tests line and fails before the implementation), keeps it under `.git/vibe-scratch/`, and never commits it. A step whose Tests line names a real command (`run.ps1 -Cli selftest`, the playground's `uv run pytest -p no:cacheprovider`, `maintainers/skill_check.py`, `maintainers/grade_run.py`) calls that command from its step check script. The playground test file (`.../harness_probe/test_paper_id.py`) is an eval template, not a test of this repo.
-- Component test command pattern: `python -B tools/cursor-harness/foreman/maintainers/skill_check.py` once step 6 has created it; before step 6, None. The repo has no package manifest, so `tools/cursor-harness/foreman/` counts as the single package for scoping, and every path outside it maps to that package too.
+- Component test command pattern: `python -B tools/cursor-harness/foreman/maintainers/skill_check.py` once step 6 has created it, plus `python -B .git/vibe-scratch/step_check_<N>.py` for every step N of the component; before step 6, only those step check scripts. The repo has no package manifest, so `tools/cursor-harness/foreman/` counts as the single package for scoping, and every path outside it maps to that package too.
 - Full-suite test command: None.
 - Linter command: None. No linter config found.
 - Formatter check command: None.
@@ -483,7 +483,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-2>
 
-### Step 2: Mode and sub-agent blocks
+### Step 2: Mode and sub-agent blocks [completed]
 
 - Component: tool-file
 
