@@ -180,7 +180,7 @@ Mention this file in Cursor's agent chat with a mode and its subject: `develop` 
   - `claude --help` and `codex exec --help` contain every switch `run.ps1` passes.
   - Claude logged in (yes/no, login type) and Codex logged in (yes/no, login type).
   - On Windows, the Codex user config has `sandbox = "unelevated"` under `[windows]`. The check reads only that key. It is changed only after the human's explicit confirmation, through setup.
-  - The pointer skill exists and points to an existing `foreman.md`. This is informational: an @-mention works without it.
+  - The pointer skill exists and points to an existing `foreman.md`. This is informational: an @-mention works without it. When setup's pointer-skill proposal is refused, the final setup report still lists it as missing.
   - Every failing line carries its exact fix: a command, a place, or a setup proposal.
   - `gh` is not a prerequisite.
   - The sub-agent returns one line per prerequisite: name, pass/fail, version or login type. It never outputs e-mail, account or organization names, or tokens.
@@ -365,7 +365,7 @@ Checks run cheapest first. The static checks are `skill_check` and the `run.ps1`
        - no login, key entry, installation or model setting is attempted
        - the file hashes of the pointer-skill path and the Codex config are unchanged
        - the final report lists the refused items as still missing
-    3. Config edit procedure: apply it to three scratch config fixtures (no `[windows]` section; section without `sandbox`; `sandbox` with another value). Each result differs from its input by exactly the one added or replaced line, and every other line is byte-equal.
+    3. Config edit procedure: apply it to three scratch config fixtures (no `[windows]` section; section without `sandbox`; `sandbox` with another value). Each result differs from its input by exactly the one added or replaced `sandbox` line (for the fixture with no `[windows]` section: the separating blank line, the `[windows]` header and that line), and every other line is byte-equal.
     4. Pointer skill: the proposed content is written into a scratch folder, and the referenced `foreman.md` path resolves.
   - Acceptance:
     - Rerun eval task 5 (review) and task 6 (sweep) against the playground.
@@ -579,14 +579,15 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-9>
 
-### Step 9: Protocol and setup tests
+### Step 9: Protocol and setup tests [completed]
 
 - Component: behavior-tests
 
 - Piece: sub-agent tests, first because they need no CLI run.
 - Run the protocol test of Testing Plan in a scratch folder outside every repo: `prerequisites-instructions` by anchored grep and ranged read with the transcript as evidence, `step-instructions` returned byte-equal, and blocked on a duplicated-tag copy.
 - Run the setup test with HOME, USERPROFILE and CODEX_HOME on scratch fixtures, every proposal answered no, file hashes unchanged; apply the config edit procedure to the three fixtures; write the pointer skill into a scratch folder and resolve its path.
-- Create `maintainers/evals/baseline-<run date>.md` and record each outcome with its pass condition.
+- A coding sub-agent cannot start fresh sub-agents, so the main session runs these tests and saves the evidence to `.git/vibe-scratch/step-9-evidence.md`. The coding sub-agent writes the baseline from that evidence and does not rerun the sub-agent tests.
+- Create `maintainers/evals/baseline-<run date>.md` and record each outcome with its pass condition. No local path, user or account name in it.
 - Pass conditions, copied from Testing Plan:
   - Protocol test, in a scratch folder outside every repo, with a copy of `foreman.md` and a two-step plan file:
     - A fresh sub-agent gets only the tool path, the plan path and the tag name `prerequisites-instructions`. It must find its instructions by the anchored grep and a ranged read, never a whole-file read; its transcript is the evidence. It returns one line per prerequisite with no account data.
@@ -600,7 +601,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
        - no login, key entry, installation or model setting is attempted
        - the file hashes of the pointer-skill path and the Codex config are unchanged
        - the final report lists the refused items as still missing
-    3. Config edit procedure: apply it to three scratch config fixtures (no `[windows]` section; section without `sandbox`; `sandbox` with another value). Each result differs from its input by exactly the one added or replaced line, and every other line is byte-equal.
+    3. Config edit procedure: apply it to three scratch config fixtures (no `[windows]` section; section without `sandbox`; `sandbox` with another value). Each result differs from its input by exactly the one added or replaced `sandbox` line (for the fixture with no `[windows]` section: the separating blank line, the `[windows]` header and that line), and every other line is byte-equal.
     4. Pointer skill: the proposed content is written into a scratch folder, and the referenced `foreman.md` path resolves.
 - Tests: every pass condition in Testing Plan for the protocol and setup tests holds, and the baseline file records it.
 

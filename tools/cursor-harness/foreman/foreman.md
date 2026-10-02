@@ -386,7 +386,7 @@ HOME is `$env:USERPROFILE` on Windows, otherwise `$HOME`. The Codex config is `$
      ```
 
    - Windows only, when the sandbox line failed: `sandbox = "unelevated"` in the `[windows]` section of the Codex config. No `[windows]` section: append a blank line, `[windows]` and the line. A section without `sandbox`: insert the line directly after the section header. `sandbox` with another value: replace only that line. Change no other line; then show the touched section's lines before and after, and no other part of the file. A config that does not parse as TOML is not edited: name the file and the line to add.
-4. Dispatch `prerequisites-instructions` again. Report `ready`, or each item still missing with its fix.
+4. Dispatch `prerequisites-instructions` again. Report `ready` when no line fails, and list each item still missing with its fix: every failing line and every refused proposal, the pointer skill included although its line is informational.
 
 </setup-mode-instructions>
 
