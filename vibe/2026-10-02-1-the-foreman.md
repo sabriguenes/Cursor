@@ -525,7 +525,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-5>
 
-### Step 5: Changelog, dependencies and banned terms
+### Step 5: Changelog, dependencies and banned terms [completed]
 
 - Component: maintainer-kit
 

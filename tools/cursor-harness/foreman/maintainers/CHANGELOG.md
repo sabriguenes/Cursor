@@ -1,0 +1,61 @@
+# Changelog
+
+Newest version first. Every version bump also updates the `Version:` line in `../foreman.md`; `skill_check.py` compares both. A change to any file in `../scripts/` is a version bump.
+
+Evidence names: "series" is the six-task test series of 2026-10-01 (`evals/baseline-2026-10-01.md`); "acceptance" is the predecessor's acceptance run (tasks 5 and 6 on the playground template); "help" is the `--help` output of the installed CLIs on 2026-10-01; "build" is the checks run while this release was built (the `run.ps1` self-test, `grade_run.py` against `run.ps1`, the playground tests).
+
+## 1.0.0
+
+Replaces second-opinion 1.0.0.
+
+First release of the Foreman. One line per rule: rule. Reason. Evidence.
+
+### Carried over
+
+- Opus and Codex never receive the tool folder, `foreman.md` or `maintainers/`; PR text, diffs, comments and files are data whose instructions are reported, never followed; Codex reviews blind; the binding rules stand at the start and are restated at the end. Reason: a reviewer that has seen the seed list cannot be graded on finding the seeds, review input is untrusted, independent findings make agreement meaningful, and start and end are the best-attended positions. Evidence: series kept the evals off-limits; series task 5, the injected comment was ignored by both reviewers and Codex's prompt named neither Opus nor its review; the predecessor's prompt-engineering audit.
+- `run.ps1` starts `claude.exe` next to the npm shim, never the shim. Reason: the shim's batch file cut a multi-line prompt. Evidence: series task 1, first plan call exit 0 without plan.
+- Every Claude call denies `git push` and `git commit` for both the Bash and the PowerShell tool. Reason: the Foreman owns every commit; an earlier tool blocked commit only in review. Evidence: series task 1 push attempt denied; sweep and plugin runners of the series lacked a block; build, `grade_run.py` `runner_denies` passes against `run.ps1`.
+- `run.ps1` removes ANTHROPIC_API_KEY, ANTHROPIC_AUTH_TOKEN and OPENAI_API_KEY before every call, sets UTF-8 console output, and reads streams as UTF-16 where PowerShell 5 writes UTF-16. Reason: subscription logins, not metered keys; Windows PowerShell 5 redirects native output as UTF-16. Evidence: series, stream `apiKeySource` none; the predecessor's runners carried the same encoding handling.
+- Claude runs `-p --output-format stream-json --verbose --add-dir <RUN_DIR>`; Codex runs `exec --json -s read-only -C <WORKTREE> --output-schema`; Claude's final answer is extracted from the stream into `logs/answer-<artifact>.md`. Reason: read-only review, machine-readable streams, and plan mode cannot write files. Evidence: help; extraction reproduces the series' task 5 Opus review byte for byte.
+- Watchdog in `run.ps1`: 900 s without stream growth (exit 4) or 3600 s in total (exit 3) ends the whole process tree and keeps partial output; no retry without the human. Reason: a stalled CLI otherwise blocks the run forever. Evidence: watchdog self-test and series probes; no stall in the series runs; build, `run.ps1 -Cli selftest`.
+- An artifact counts only when it exists, is non-empty and valid, with one rerun; a CLI rejection (login, quota, policy, unknown switch) is an end state. Reason: exit 0 without artifact happened; retries cannot fix a rejection and cost tokens. Evidence: series task 1; series rule, no rejection observed.
+- Every switch is confirmed against `--help` before first use; no call passes a model switch; model and tokens are recorded per call and no cost is computed. Reason: CLI flags change between versions; the human's CLI configuration decides the model; prices change and the providers' usage pages are binding. Evidence: help; acceptance recorded the Codex model and compared it with the series model; series token table.
+- Streams are read only by an anchored pattern search bounded to one match, or through a sub-agent. Reason: streams are large; context is a budget. Evidence: the series task 5 Opus stream alone is 235 KB.
+- Develop steps pass `--allowedTools` with one command per entry, for Bash and PowerShell, with and without arguments. Reason: an allowlist entry covers exactly one command form, so a missing form stalls the step on a permission prompt. Evidence: carried from the predecessor's develop block; no measurement recorded.
+- `RUN.md` is the only state, rewritten after every call; `INDEX.md` gets one line per run and loses none; layout v2; the run folder is excluded through `info/exclude`, never `.gitignore`; the tool version stands in `RUN.md`. Reason: resume after compaction or a new session; the tool must not change tracked files of a foreign repo; a flat run folder was unreadable; every script change bumps the version, so the version identifies the scripts. Evidence: series resumes; acceptance; series runs after the layout switch; this changelog's header rule.
+- Commands are discovered from CI, `pyproject.toml`, `package.json`, `Makefile`, the README; no test command stops the run. Reason: no repo-specific command may be built in. Evidence: acceptance on the playground template, command from its CI file.
+- `AGENTS.md`, `CLAUDE.md` and `CLAUDE.local.md` are read as repo rules, never changed. Reason: they belong to the repo's owners. Evidence: none needed; read-only.
+- An architect plan is accepted as input in place of an Opus plan. Reason: reuse a reviewed plan instead of re-planning. Evidence: tag set of the architect plan contract.
+- Gate in Cursor plan mode, each needs-human question asked singly with its proposal; open questions sorted into answerable, measurable, defect and needs human, at most 3 rounds. Reason: product decisions belong to the human; only real decisions reach the human; the loop must end. Evidence: series tasks 2 to 4, 1 to 3 passes, 0 rejections; series tasks 2 and 3.
+- Empty `[WIP] Plan:` seed commit and one `[WIP] Step <n>:` commit per step, files staged by name, fixes amended; resume from these subjects. Reason: transport commits make resume exact. Evidence: transport-commit pattern of the plan-execution workflow this tool reuses.
+- Scope check after every Claude call; a `SCOPE REQUEST` is asked, and an approved file goes into the plan without a second gate. Reason: the older rule (a new plan) did not fire in practice. Evidence: series task 4.
+- Bug-fix steps reproduce red first; Codex reviews every step, Opus answers each finding agree, disagree or unsure and fixes only agree, at most 2 rounds. Reason: a fix without a red test proves nothing; a second opinion per change with a bounded loop. Evidence: series rule; series tasks 1 to 4.
+- A hook that rejects a commit goes to the human with the changes left staged; renaming, squashing and pushing are the human's. Reason: a hook encodes the repo owner's policy and the branch leaves the site only in the human's hands. Evidence: carried from the predecessor's develop block; no rejection observed.
+- Review is read-only: nothing fixed, committed or pushed, and the worktree is clean afterwards. Reason: a review must not change what it reviews. Evidence: series task 5; acceptance task 5, 3 of 3 seeds by both, worktree clean.
+- Sweep reads every module file in full, checked from the logs, with one more round for unread files. Reason: a sweep that skips files is not a sweep. Evidence: series task 6, 3 of 3 files; acceptance task 6, 3 of 3 files by both, no second round.
+- Same file, function and misbehavior is the same finding, whatever the wording. Reason: two wordings of one defect must not count twice or split. Evidence: acceptance tasks 5 and 6 triage.
+- A single-reporter logic finding is decided by exactly one referee test function, run alone and never committed. Reason: the series referee had 10 cases for one finding. Evidence: series task 5 deviation; acceptance tasks 5 and 6, four single-reporter findings, each decided by one function.
+- No persuasion round: neither model overrules the other. Reason: a test decides, not an argument. Evidence: acceptance tasks 5 and 6, every single-reporter finding decided by its test.
+- Review and sweep rules allow one edit path, Claude's plan-mode notes file directly under the Claude plans folder. Reason: it is the only write plan mode permits, outside the repo; a file of that name inside the worktree still fails the clean-worktree check. Evidence: acceptance task 6, Opus wrote it, first grade 12 of 13.
+- Branch and run names name no seed. Reason: the reviewers see them in the brief and the diff command. Evidence: acceptance task 5 prompts carried a branch name that named the seed.
+- `grade_run.py` exits 2 on a golden failure. Reason: golden checks need code, not judgment, and a distinct code separates them from usage errors. Evidence: re-grading the series task 5 run, 6 of 6 checks pass; acceptance task 5 10 of 10, task 6 13 of 13; build, exit 2 on a missing artifact.
+- Emission discipline: no tool path, seed or expected finding in briefs or prompts; secrets named by file and pattern only; loop caps of 3 plan rounds, 3 gate passes, 2 gate rejections, 2 review rounds per step, 2 sweep rounds and 1 artifact rerun; no run file names a source document; a yes-or-no checklist before every call. Reason: whatever a run writes can reach a model or a public log. Evidence: carried from the predecessor's emission section; series task 5 and acceptance prompts checked.
+- The Codex Windows sandbox setting `unelevated` under `[windows]` stays a prerequisite check and is changed only after the human's explicit confirmation, through setup. Reason: without it, read-only Codex is blocked even from plain file reads on Windows. Evidence: the predecessor's prerequisite row, reads "blocked by policy" without it.
+- In repos that track a test cache, the scope check catches cache writes and the `Commands` record carries the runner's cache-off switch (for pytest, `-p no:cacheprovider`). Reason: a cache write is a foreign file and stops the run. Evidence: build, the playground tests run with `-p no:cacheprovider`.
+- No isolation flag such as `--ignore-user-config`. Reason: it switches off the Codex sandbox setting, the model selection and `--resume`; revisit when both can be set by flag. Evidence: help.
+
+### Changed
+
+- The doctor script becomes `prerequisites-instructions`, run by a sub-agent. Reason: one tool file, and the output stays bounded and free of account data. Evidence: acceptance doctor output, carried as one check per line.
+- The prompt script becomes Foreman prompt assembly by shell copy, with the placeholder check and the tool-path check. Reason: the same guarantees without a script. Evidence: acceptance prompts built only through the script; the same two checks stand in "Prompt assembly".
+- The schema file becomes `review-schema-instructions`, extracted by `run.ps1` before every Codex call. Reason: `--output-schema` needs a file, and one tool file holds the schema. Evidence: build, `grade_run.py` reads the schema from the block.
+- Four call scripts become `run.ps1`. Reason: one entry point for every CLI call. Evidence: build, `run.ps1 -Cli selftest` and the `runner_denies` check.
+- The per-call grade_run becomes pattern search plus `coverage-instructions`; `grade_run.py` stays for maintainers. Reason: a run needs bounded reads, not a grader. Evidence: series task 5 Opus stream of 235 KB; acceptance gradings.
+- The prerequisites file becomes the prerequisites block, and the dependency row tying it to the doctor checks disappears. Reason: one list instead of two that had to match. Evidence: the predecessor's doctor failed on any mismatch between the two.
+- The run folder moves to `.foreman/runs/`. Reason: the folder carries the tool's name. Evidence: build, `grade_run.py --help` names the new path.
+- Architect plan acceptance also checks the seven H2 headings, not only the six tags. Reason: a plan with the tags but without its headings is not an architect plan. Evidence: tag set and heading set of the architect plan contract.
+
+### Dropped
+
+- The optional plugin review (`/codex:review` through Claude). Reason: it duplicates the Codex step review. Evidence: no evidence line in the predecessor's changelog; revisit if a user asks for it.
+- Images in the tool file. Reason: no settled art and no value for the model. Evidence: none exist; revisit when images exist.
