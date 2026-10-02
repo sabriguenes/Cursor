@@ -1,5 +1,5 @@
 {
-  "task": "5 review pr-seeded",
+  "task": "5 review pr-1",
   "runner_denies": [
     "Bash(git push *)",
     "PowerShell(git push *)",

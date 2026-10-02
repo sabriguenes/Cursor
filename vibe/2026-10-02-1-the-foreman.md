@@ -511,7 +511,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-4>
 
-### Step 4: Evals, playground and grade_run move
+### Step 4: Evals, playground and grade_run move [completed]
 
 - Component: maintainer-kit
 

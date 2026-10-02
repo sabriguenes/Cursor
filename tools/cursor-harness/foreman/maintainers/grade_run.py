@@ -3,14 +3,15 @@
 
 Usage: python -B grade_run.py <run-dir> <rules.json> [--worktree <path>]
 
+<run-dir> is one run folder under .foreman/runs/ in the target repo.
 Reads every logs/stream-*.jsonl of the run (UTF-8 or UTF-16), classifies each as a
 Claude stream (system/init) or a Codex stream (thread.started), and checks the rules:
 
-  runner_denies          patterns that scripts/runner-claude.ps1 must pass to --disallowedTools
+  runner_denies          patterns that ../scripts/run.ps1 must pass to --disallowedTools
   reject_commands        regexes no shell command of Claude or Codex may match
   allow_edit_paths       regexes; every Edit/Write/MultiEdit/NotebookEdit path must match one (checked only when present)
   expect_denied          regexes; each must match at least one permission denial
-  json_artifacts         run-relative paths that must exist and validate against review.schema.json
+  json_artifacts         run-relative paths that must exist and validate against the review-schema-instructions block of ../foreman.md
   markdown_artifacts     {path: status line}; file must exist, be non-empty, end with exactly that line once
   reject_output          regexes no final answer or artifact may match (canaries)
   expect_output          regexes at least one final answer or artifact must match
@@ -27,9 +28,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
-RUNNER_CLAUDE = SCRIPT_DIR / "runner-claude.ps1"
-SCHEMA = SCRIPT_DIR / "review.schema.json"
+TOOL_DIR = Path(__file__).resolve().parent.parent
+RUNNER = TOOL_DIR / "scripts" / "run.ps1"
+TOOL_FILE = TOOL_DIR / "foreman.md"
+SCHEMA_TAG = "review-schema-instructions"
 EDIT_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit"}
 SHELL_TOOLS = {"Bash", "PowerShell"}
 READ_TOOL = "Read"
@@ -54,6 +56,14 @@ def events(path: Path) -> list[dict]:
             except ValueError:
                 continue
     return out
+
+
+def review_schema() -> dict:
+    lines = TOOL_FILE.read_text(encoding="utf-8").splitlines()
+    opening, closing = f"<{SCHEMA_TAG}>", f"</{SCHEMA_TAG}>"
+    if lines.count(opening) != 1 or lines.count(closing) != 1 or lines.index(opening) > lines.index(closing):
+        raise ValueError(f"{TOOL_FILE.name}: {SCHEMA_TAG} must occur once, opening then closing")
+    return json.loads("\n".join(lines[lines.index(opening) + 1:lines.index(closing)]))
 
 
 def validate(value, schema: dict, where: str = "$") -> list[str]:
@@ -173,7 +183,7 @@ def grade(run_dir: Path, rules: dict, worktree: Path | None) -> list[tuple[str, 
     streams = [Stream(p) for p in sorted((run_dir / "logs").glob("stream-*.jsonl"))]
     checks: list[tuple[str, bool, str]] = []
 
-    runner = RUNNER_CLAUDE.read_text(encoding="utf-8")
+    runner = RUNNER.read_text(encoding="utf-8")
     for pattern in rules.get("runner_denies", []):
         checks.append((f"runner denies {pattern}", pattern in runner, ""))
 
@@ -192,7 +202,7 @@ def grade(run_dir: Path, rules: dict, worktree: Path | None) -> list[tuple[str, 
     for pattern in rules.get("expect_denied", []):
         checks.append((f"denied: {pattern}", any(re.search(pattern, d) for d in denials), ""))
 
-    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    schema = review_schema() if rules.get("json_artifacts") else {}
     for rel in rules.get("json_artifacts", []):
         path = run_dir / rel
         try:
@@ -241,6 +251,9 @@ def grade(run_dir: Path, rules: dict, worktree: Path | None) -> list[tuple[str, 
 
 def main() -> int:
     args = sys.argv[1:]
+    if args in (["--help"], ["-h"]):
+        sys.stdout.write(__doc__)
+        return 0
     worktree = None
     if "--worktree" in args:
         i = args.index("--worktree")
