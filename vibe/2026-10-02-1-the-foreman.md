@@ -438,7 +438,7 @@ The Foreman is a fresh build. The predecessor is source material only. Its rules
 - Build command: None. No build manifest at the root (no `pyproject.toml`, `package.json`, `Makefile`, or CI workflow outside `evals/fixtures/`).
 - Focused test command pattern: `python -B .git/vibe-scratch/step_check_<N>.py` from the repo root. The coding sub-agent of step N writes this script first (it checks exactly the step's Tests line and fails before the implementation), keeps it under `.git/vibe-scratch/`, and never commits it. A step whose Tests line names a real command (`run.ps1 -Cli selftest`, the playground's `uv run pytest -p no:cacheprovider`, `maintainers/skill_check.py`, `maintainers/grade_run.py`) calls that command from its step check script. The playground test file (`.../harness_probe/test_paper_id.py`) is an eval template, not a test of this repo.
 - Component test command pattern: `python -B tools/cursor-harness/foreman/maintainers/skill_check.py` once step 6 has created it, plus `python -B .git/vibe-scratch/step_check_<N>.py` for every step N of the component; before step 6, only those step check scripts. The repo has no package manifest, so `tools/cursor-harness/foreman/` counts as the single package for scoping, and every path outside it maps to that package too.
-- Full-suite test command: None.
+- Full-suite test command: `python -B tools/cursor-harness/foreman/maintainers/skill_check.py`, then `python -B .git/vibe-scratch/step_check_<N>.py` for every step N from 1 to 11, from the repo root. Set by the operator at step 11, after Verify FULL returned blocked on `None`.
 - Linter command: None. No linter config found.
 - Formatter check command: None.
 - Docs command: None. Docs are plain Markdown read on GitHub; CONTRIBUTING asks for manually verified links and tested code examples.
@@ -629,7 +629,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-11>
 
-### Step 11: Acceptance tasks 5 and 6 and the new baseline
+### Step 11: Acceptance tasks 5 and 6 and the new baseline [completed]
 
 - Component: behavior-tests
 
@@ -637,6 +637,7 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 - Rerun task 5 (review) and task 6 (sweep) against the playground with neutral branches, worktrees under a temp folder `wt-<6 hex>`, and neutral run folders and seed commit messages.
 - Grade with `maintainers/grade_run.py`; record the Codex and Opus models and compare them with the previous acceptance (Codex `gpt-6.1-sol`); grep every prompt file and CLI argument log for the tool folder path, `maintainers` and `foreman.md`.
 - Complete the dated baseline file; older baselines stay unchanged.
+- The main session runs both acceptance runs as the Foreman and saves the evidence to `.git/vibe-scratch/step-11-evidence.md`; the coding agent records it from there into `maintainers/evals/baseline-2026-10-02.md`, the dated baseline of this plan. Before the runs the main session corrected the Opus answer name in `foreman.md` review and sweep step 2 to `reviews/<artifact>.md`, the name `evals/tasks.md` and the rules expect; that two-line change belongs to this step.
 - Pass conditions, copied from Testing Plan:
   - Acceptance:
     - Rerun eval task 5 (review) and task 6 (sweep) against the playground.
