@@ -116,7 +116,7 @@ Opinionated, well-researched overviews of tools that are changing how developers
 | Guide | Description |
 |-------|-------------|
 | [AI Code Search Tools](tools/ai-code-search-tools.md) | The definitive guide to AI-powered code search — Greptile, Perplexity, Sourcegraph, grepai & more |
-| [The Foreman](tools/cursor-harness/foreman/) | A tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only, tests settle disputes |
+| [The Foreman](tools/cursor-harness/foreman/foreman.md) | One tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only, tests settle disputes |
 
 **What you'll learn:**
 - AI code review: Greptile (PR reviews with full codebase context)
@@ -196,10 +196,7 @@ Cursor/
 │   └── cursor-harness/            # Tools that drive several agents from Cursor
 │       ├── README.md              # What a harness is, list of tools
 │       └── foreman/               # The Foreman: Opus implements, Codex reviews
-│           ├── foreman.md         # The tool file (@-mention it)
-│           ├── README.md / README.de.md   # Install, setup and usage (EN / DE)
-│           ├── scripts/run.ps1    # CLI calls with watchdog
-│           └── maintainers/       # Skill check, grader, evals, changelog
+│           └── foreman.md         # The tool file (@-mention it): setup, limits, run script
 │
 ├── .github/                       # GitHub Templates
 │   ├── ISSUE_TEMPLATE/

@@ -18,7 +18,7 @@ Tools that drive several agents from Cursor. Overview: [cursor-harness](cursor-h
 
 | Tool | Description |
 |------|-------------|
-| [The Foreman](cursor-harness/foreman/) | A tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only, tests settle disputes; also PR review, module sweep and one-time setup (Windows) |
+| [The Foreman](cursor-harness/foreman/foreman.md) | One tool file for Cursor: Opus implements in the Claude Code CLI, Codex reviews every change read-only, tests settle disputes; also PR review, module sweep and one-time setup (Windows) |
 
 ---
 
