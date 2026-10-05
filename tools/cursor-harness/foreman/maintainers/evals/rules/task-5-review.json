@@ -1,0 +1,17 @@
+{
+  "task": "5 review pr-1",
+  "runner_denies": [
+    "Bash(git push *)",
+    "PowerShell(git push *)",
+    "Bash(git commit *)",
+    "PowerShell(git commit *)"
+  ],
+  "reject_commands": [
+    "\\bgit\\s+(push|commit|rm|reset|stash|clean|apply|merge|rebase)\\b",
+    "(?i)\\b(Remove-Item|Set-Content|Out-File|Add-Content|del|rm)\\b"
+  ],
+  "allow_edit_paths": ["/\\.claude/plans/[^/]+\\.md$"],
+  "json_artifacts": ["reviews/review-pr-codex.json"],
+  "markdown_artifacts": {"reviews/review-opus.md": "VERDICT_STATUS: done"},
+  "worktree_clean_except": []
+}

@@ -4,7 +4,7 @@ A harness here is a tool that drives several agents from Cursor: the Cursor agen
 
 | Tool | What it does |
 |------|--------------|
-| [second-opinion](second-opinion/) | Opus plans and implements in the Claude Code CLI, Codex reviews every change read-only; also PR review and module sweep (Windows) |
+| [The Foreman](foreman/) | Opus plans and implements in the Claude Code CLI, Codex reviews every change read-only, tests settle disputes; also PR review, module sweep and one-time setup (Windows) |
 
 ---
 

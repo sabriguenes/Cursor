@@ -1,0 +1,11 @@
+[project]
+name = "harness-probe"
+version = "0.0.0"
+description = "Synthetic playground for the Foreman evals."
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["harness_probe"]
