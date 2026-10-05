@@ -2,7 +2,7 @@
 
 Newest version first. Every version bump also updates the `Version:` line in `../foreman.md`; `skill_check.py` compares both. A change to any file in `../scripts/` is a version bump.
 
-Evidence names: "series" is the six-task test series of 2026-10-01 (`evals/baseline-2026-10-01.md`); "acceptance" is the predecessor's acceptance run (tasks 5 and 6 on the playground template); "help" is the `--help` output of the installed CLIs on 2026-10-01; "build" is the checks run while this release was built (the `run.ps1` self-test, `grade_run.py` against `run.ps1`, the playground tests).
+Evidence names: "series" is the six-task test series of 2026-10-01 (`evals/baseline-2026-10-01.md`); "acceptance" is the predecessor's acceptance run (tasks 5 and 6 on the playground template); "help" is the `--help` output of the installed CLIs on 2026-10-01; "build" is the checks run while this release was built (the `run.ps1` self-test, `grade_run.py` against `run.ps1`, the playground tests); "resume" is the resume test of 2026-10-05 with its deviations (`evals/baseline-2026-10-02.md`).
 
 ## 1.0.0
 
@@ -54,6 +54,16 @@ First release of the Foreman. One line per rule: rule. Reason. Evidence.
 - The prerequisites file becomes the prerequisites block, and the dependency row tying it to the doctor checks disappears. Reason: one list instead of two that had to match. Evidence: the predecessor's doctor failed on any mismatch between the two.
 - The run folder moves to `.foreman/runs/`. Reason: the folder carries the tool's name. Evidence: build, `grade_run.py --help` names the new path.
 - Architect plan acceptance also checks the seven H2 headings, not only the six tags. Reason: a plan with the tags but without its headings is not an architect plan. Evidence: tag set and heading set of the architect plan contract.
+
+### Added
+
+- Sub-agents get one fixed template, copied unchanged as the whole Task prompt: file path, tag, values and the grep instruction, nothing else. Reason: an orchestrator-written prompt that restated the output limits was blocked under the provider's usage policy, and paraphrase drifts from the block. Evidence: resume, the paraphrased prerequisites dispatch blocked before any tool call; the same block dispatched with path, tag and grep instruction passed twice, and once more with the new template.
+- A blocked, failed or empty sub-agent is an end state: the error line is recorded, the run stops with `stopped: sub-agent <tag>: <error line>`, a retry happens only on the human's word, and the orchestrator never runs the block's checks itself. Reason: the inline fallback was undefined and pulled the checks' raw output into the main context. Evidence: resume, the orchestrator ran the prerequisites inline after the block.
+- The login checks print only login state and kind (`Select-Object loggedIn, authMethod` for Claude, the login kind for Codex). Reason: `claude auth status --json` prints address and organization fields and `codex login status` a masked key, none of which a check needs. Evidence: resume, both raw outputs inspected by field name only; build, the filtered commands print `claude.ai` and `an API key`.
+- Commands other than the `-File` call to `run.ps1` run directly in the agent shell; a command that has to run inside another `powershell.exe` goes in single quotes. Reason: inside double quotes the outer shell expands `$` variables before the inner shell runs. Evidence: resume, `$ex` expanded to empty in a nested `powershell.exe -Command "..."` and worked when run directly.
+- `run.ps1` writes the Codex model to `logs/model-<artifact>.txt`, read from the Codex session file named by the stream's `thread.started` thread id; a missing file is recorded as `model unknown`. Reason: `codex exec --json` streams name no model, so every Codex call was recorded as "model not in stream". Evidence: resume, every Codex call of the run; build, one read-only Codex call wrote `gpt-6.1-sol` and four negative cases wrote nothing.
+- On resume, a call whose prompt or stream exists without a line under Calls is recorded as `interrupted`, keeps its files, and the new call gets a new artifact name such as `<artifact>-r<k>`. Reason: reusing the name overwrote the interrupted call's partial stream. Evidence: resume, the step-2 stream of the interrupted call was overwritten.
+- `.gitattributes` in the tool folder pins LF for every text file. Reason: a CRLF checkout, the Git for Windows default, makes ripgrep and Cursor's Grep miss every line-anchored tag, so every run stops at prompt assembly. Evidence: build, a CRLF copy of `foreman.md` gave 0 tag matches with ripgrep and 2 with `--crlf`; a clone under `core.autocrlf=true` checks out LF and finds both tags.
 
 ### Dropped
 

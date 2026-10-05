@@ -77,7 +77,8 @@ For every prompt, in order, with no script and no retyping:
 4. Exit 4 is a stall (900 s without stream growth), exit 3 the cap (3600 s in total); partial output is kept. Set `stopped: stall|cap` and retry only on the human's word. End no call earlier yourself.
 5. Valid means: JSON matches the `review-schema-instructions` schema; Markdown ends with exactly one status line (`VERDICT_STATUS: done`, `STEP_STATUS: done|blocked|scope_request`). A missing, empty or invalid artifact gets one rerun with the same prompt; a second failure stops the run.
 6. A CLI that rejects the call (login, quota, policy, unknown switch) is an end state. Record the error line and stop; retry nothing.
-7. After every call, record model and tokens from the stream by anchored pattern search, one match each. Compute no cost; the providers' usage pages are binding.
+7. After every call, record model and tokens by anchored pattern search, one match each: tokens from the stream; Claude's model from the stream's init event, Codex's from `logs/model-<artifact>.txt`, which `run.ps1` writes from the Codex session file; `model unknown` when that file is missing. Compute no cost; the providers' usage pages are binding.
+8. Run every command other than the `-File` call to `run.ps1` directly in your shell. A command that has to run inside another `powershell.exe` is passed in single quotes, so the outer shell expands no `$` variable.
 
 ## Worktree
 
@@ -111,13 +112,26 @@ The gate runs in Cursor plan mode. Show `plan.md` unchanged and ask each needs-h
 1. Read RUN.md and its mode block. Work only in the WORKTREE it records.
 2. In develop, `git log --format=%s <base>..HEAD` in WORKTREE: each `[WIP] Step <n>:` subject is a finished step.
 3. Uncommitted changes in WORKTREE: show `git status --short` to the human and wait. Discard nothing without the human.
-4. Continue at the first step without a `[WIP]` commit; a new Claude session is fine.
+4. A call whose prompt file or stream exists in RUN_DIR without a line under Calls was interrupted: add its line with watchdog `interrupted`, keep its files, and give the new call a new artifact name, for example `<artifact>-r<k>`.
+5. Continue at the first step without a `[WIP]` commit; a new Claude session is fine.
 
 ## Sub-agent dispatch
 
-- Sub-agents are Cursor Tasks. Each prompt holds only this file's absolute path, one tag name and that block's runtime values, and tells the sub-agent to grep `^</?TAG>$`, read only that range and follow it.
-- `prerequisites-instructions`: no values. It returns one line per prerequisite: name, pass or fail, version or login type, and for a fail its exact fix. It outputs no e-mail, account or organization name and no token.
+Sub-agents are Cursor Tasks. Copy this template unchanged as the whole Task prompt, replace only the lowercase descriptors after `File:`, `Tag:` and `Values:`, and add no other text: no role, no restated limits, no summary of the block.
+
+```text
+File: absolute path of this file
+Tag: tag name
+Values: one name = value pair per line, or none.
+Grep File with ^</?tag>$, where tag is the Tag above. Require exactly two matches, opening then closing. Read only that inclusive line range and follow it with the Values above.
+```
+
+A block without values gets the line `Values: none.`
+
+- `prerequisites-instructions`: no values. It returns one line per prerequisite: name, pass or fail, version or login kind, and for a fail its exact fix. The login lines report only whether a login exists and its kind; no other output field of those commands is copied.
 - `coverage-instructions`: values RUN_DIR, WORKTREE and the file list. It writes `coverage-<module>.md` and returns only the count of files not read in full.
+
+A sub-agent that is blocked, returns an error, or returns no result has failed. Record its error line (in RUN.md under open points during a run) and stop with `stopped: sub-agent <tag>: <error line>`; in setup, show the line and stop. Retry only on the human's word. Do not run the block's checks in your own context.
 
 ## Emission discipline
 
@@ -403,12 +417,12 @@ Each line: prerequisite; command; pass condition; fix.
 - codex.js; `Test-Path` on `node_modules/@openai/codex/bin/codex.js` below `Split-Path (Get-Command codex).Source`; True; reinstall the Codex CLI through npm.
 - Claude switches; `claude --help`; lists `-p`, `--output-format`, `--verbose`, `--add-dir`, `--disallowedTools`, `--allowedTools`, `--permission-mode`, `--session-id`, `--resume`; update Claude Code, naming each missing switch.
 - Codex switches; `codex exec --help`; lists `--json`, `-s`, `-C`, `--output-schema`, `-o`; update the Codex CLI, naming each missing switch.
-- Claude login; `claude auth status --json`; logged in with a Claude subscription (`claude.ai`); run `claude auth login` with a Claude subscription.
-- Codex login; `codex login status`; logged in, ChatGPT or API key; run `codex login`.
+- Claude login; `claude auth status --json | ConvertFrom-Json | Select-Object loggedIn, authMethod`; loggedIn True and authMethod `claude.ai`; run `claude auth login` with a Claude subscription.
+- Codex login; `codex login status 2>&1 | Select-String -Pattern '^Logged in using (an API key|ChatGPT)' | ForEach-Object { $_.Matches[0].Groups[1].Value }`; prints a kind (empty: not logged in); run `codex login`.
 - Codex sandbox, Windows only; read only the `sandbox` key of the `[windows]` section of the Codex config; value `unelevated`; propose it through setup, changed only after the human's explicit yes.
 - Pointer skill, informational; `<HOME>/.cursor/skills/<STEM>/SKILL.md` exists and the path it names exists; reported, not a fail; add it through setup, or reference the file directly.
 
-Return one line per prerequisite: `<name>: pass|fail, <version or login type>`, and for a fail `; fix: <fix>`. Output no e-mail address, account or organization name, and no token: from the login commands report only logged in yes or no and the login type.
+Return one line per prerequisite: `<name>: pass|fail, <version or login kind>`, and for a fail `; fix: <fix>`. The login lines report only whether a login exists and its kind; copy no other output field of those commands.
 
 </prerequisites-instructions>
 

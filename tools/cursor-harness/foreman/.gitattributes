@@ -1,0 +1,2 @@
+# Tags and status lines are found by line-anchored searches that a CRLF checkout breaks.
+* text=auto eol=lf

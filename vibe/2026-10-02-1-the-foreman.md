@@ -609,13 +609,14 @@ Component order and reasons. `tool-file` comes first because `run.ps1` extracts 
 
 <step-10>
 
-### Step 10: Resume test
+### Step 10: Resume test [completed]
 
 - Component: behavior-tests
 
 - Piece: resume, before acceptance because it exercises the develop path alone.
 - In a scratch copy of the playground with neutral names, run the four resume steps of Testing Plan: a two-step develop run, the `run.ps1` tree ended during step 2's Claude call, a fresh chat saying resume, and continuation after the human's answer.
 - Record the outcome in the step 9 baseline file.
+- The main session runs the resume test, the human starts the fresh chat, and the evidence is saved to `.git/vibe-scratch/step-10-evidence.md`; the coding agent records it from there.
 - Pass conditions, copied from Testing Plan:
   - Resume test, in a scratch copy of the playground with neutral names:
     1. Start a develop run of a two-step plan.

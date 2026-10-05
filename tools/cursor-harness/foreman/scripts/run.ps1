@@ -32,6 +32,8 @@ $streamPath = Join-Path $logDir ("stream-{0}.jsonl" -f $Artifact)
 $errPath = Join-Path $logDir ("stream-{0}.err" -f $Artifact)
 $exitPath = Join-Path $logDir ("exit-{0}.txt" -f $Artifact)
 $schemaPath = Join-Path (Join-Path $RunDir "scripts") "review.schema.json"
+# Windows PowerShell 5 redirects native output as UTF-16.
+$streamEncoding = if ($PSVersionTable.PSVersion.Major -lt 6) { "Unicode" } else { "UTF8" }
 
 function Fail([string]$Message) {
     # The hidden child has no visible console, so its setup failures go to the exit file.
@@ -87,10 +89,9 @@ function Invoke-Claude {
     & $claude @claudeArgs 1> $streamPath 2> $errPath
     $code = $LASTEXITCODE
     Set-Content -LiteralPath $exitPath -Value $code -Encoding ascii
-    # Windows PowerShell 5 redirects native output as UTF-16; plan mode cannot write files, so the answer is taken from the stream.
-    $encoding = if ($PSVersionTable.PSVersion.Major -lt 6) { "Unicode" } else { "UTF8" }
+    # Plan mode cannot write files, so the answer is taken from the stream.
     $answer = $null
-    foreach ($line in (Get-Content -Encoding $encoding -LiteralPath $streamPath -ErrorAction SilentlyContinue)) {
+    foreach ($line in (Get-Content -Encoding $streamEncoding -LiteralPath $streamPath -ErrorAction SilentlyContinue)) {
         if ($line -notmatch '"type"\s*:\s*"result"') { continue }
         try { $evt = $line | ConvertFrom-Json } catch { continue }
         if ($evt.type -eq "result" -and $evt.result) { $answer = [string]$evt.result }
@@ -114,6 +115,18 @@ function Invoke-Codex {
     & $node.Source $codexJs exec --json -s read-only -C $Worktree --output-schema $schemaPath -o $outPath $prompt 1> $streamPath 2> $errPath
     $code = $LASTEXITCODE
     Set-Content -LiteralPath $exitPath -Value $code -Encoding ascii
+    # The stream names no model; the session file named by the thread.started thread id does. Nothing is written when either is missing.
+    $thread = Select-String -LiteralPath $streamPath -Encoding $streamEncoding -List `
+        -Pattern '^\{"type":"thread\.started","thread_id":"([0-9A-Za-z-]+)"' -ErrorAction SilentlyContinue
+    if ($thread) {
+        $codexDir = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }
+        $session = Get-ChildItem -LiteralPath (Join-Path $codexDir "sessions") -Recurse -File -ErrorAction SilentlyContinue `
+            -Filter ("rollout-*-{0}.jsonl" -f $thread.Matches[0].Groups[1].Value) | Select-Object -First 1
+        $model = if ($session) { Select-String -LiteralPath $session.FullName -Encoding utf8 -List -Pattern '"model":"([^"]+)"' }
+        if ($model) {
+            Set-Content -LiteralPath (Join-Path $logDir ("model-{0}.txt" -f $Artifact)) -Value $model.Matches[0].Groups[1].Value -Encoding ascii
+        }
+    }
     exit $code
 }
 
